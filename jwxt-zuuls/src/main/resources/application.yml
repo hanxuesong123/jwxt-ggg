@@ -1,0 +1,43 @@
+server:
+  port: 56700
+spring:
+  application:
+    name: my-zuul
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    #url: jdbc:mysql://192.168.5.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: root
+
+
+
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:56798/eureka/,http://localhost:56799/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: my_zuul8088
+
+
+
+
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+  eureka:
+    enabled: true
+
+zuul:
+  routes:
+    jwxt-teacher:
+      path: /teacher/**
+      service-id: jwxt-teacher
+    jwxt-learner:
+      path: /student/**
+      service-id: jwxt-learner
+    ignored-services: '*'
+    #ignored-patterns: '/**/find/**'  #忽略这样带有find的接口请求(就是不能再访问带有find的接口
