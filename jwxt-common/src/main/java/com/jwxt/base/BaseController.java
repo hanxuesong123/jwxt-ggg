@@ -1,7 +1,9 @@
 package com.jwxt.base;
 
+import com.jwxt.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @Data
 public class BaseController {
+
+
 
     protected HttpServletRequest request;
     protected HttpServletResponse response;
@@ -20,11 +24,12 @@ public class BaseController {
     public void setReqAndRes(HttpServletRequest request,HttpServletResponse response){
         this.response = response;
         this.request = request;
-        Object obj = request.getAttribute("user_claims");
-        if(obj != null){
-            this.claims = (Claims) obj;
-            this.userId = (String) claims.get("userId");
-            this.nickName = (String) claims.get("nickName");
+        Claims claims = JwtUtils.getClaims(request);
+        // Object obj = request.getAttribute("user_claims");
+        if(claims != null){
+            this.claims = claims;
+            this.userId = (String) this.claims.get("userId");
+            this.nickName = (String) this.claims.get("nickName");
         }
     }
 

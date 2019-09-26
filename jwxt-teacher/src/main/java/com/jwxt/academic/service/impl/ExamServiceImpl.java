@@ -16,6 +16,7 @@ import com.jwxt.quality.mapper.StudentClassesMapper;
 import com.jwxt.response.PageResult;
 import com.jwxt.response.Result;
 import com.jwxt.response.ResultCode;
+import com.jwxt.utils.MyRedisTemplate;
 import com.jwxt.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,10 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
 
     @Autowired
     private AskMapper askMapper;
+
+    @Autowired
+    private MyRedisTemplate myRedisTemplate;
+
     @Override
     public Result list(Map<String, Object> map) {
         IPage<Exam> iPage = super.iPage(map);
@@ -120,10 +125,11 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
                 exam.setUpperJoins(upperJoins);
             }
 
-
             examMapper.insert(exam);
 
             examClassesMapper.insertExamClasses(exam.getId(),classId);
+
+            myRedisTemplate.hSetObject(exam.getId(),classId,exam);
 
             return Result.SUCCESS();
         } catch (Exception e) {

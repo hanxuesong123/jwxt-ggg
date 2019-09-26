@@ -12,6 +12,7 @@ import com.jwxt.response.Result;
 import com.jwxt.response.ResultCode;
 import com.jwxt.utils.CookieUtils;
 import com.jwxt.utils.JwtUtils;
+import com.jwxt.utils.MyRedisTemplate;
 import com.jwxt.utils.RedisUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,8 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 
+    @Autowired
+    private MyRedisTemplate myRedisTemplate;
     @Override
     public Result login(User user, HttpServletRequest request, HttpServletResponse response) throws CommonException {
 
