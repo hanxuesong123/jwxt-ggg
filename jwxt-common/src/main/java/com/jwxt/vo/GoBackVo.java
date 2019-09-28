@@ -2,6 +2,7 @@ package com.jwxt.vo;
 
 import com.jwxt.entity.academic.AskResult;
 import com.jwxt.entity.academic.MutipleResult;
+import com.jwxt.entity.academic.Score;
 import com.jwxt.entity.academic.SingleResult;
 import lombok.*;
 
@@ -15,6 +16,8 @@ import java.util.List;
 @Data
 public class GoBackVo implements Serializable {
 
+
+    private Score score;
     private List<AskResult> askResults;
     private List<SingleResult> singleResults;
     private List<MutipleResult> mutipleResults;

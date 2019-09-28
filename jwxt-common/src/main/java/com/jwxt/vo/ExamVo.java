@@ -1,11 +1,16 @@
 package com.jwxt.vo;
 
-import lombok.Data;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class ExamVo {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+public class ExamVo implements Serializable {
 
     List<QuestionVo> singleList;
     List<QuestionVo> mutipleList;

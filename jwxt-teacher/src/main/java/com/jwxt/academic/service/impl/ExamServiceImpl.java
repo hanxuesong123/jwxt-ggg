@@ -163,19 +163,19 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
     @Override
     public Result startExam(String id) throws CommonException {
         Exam exam = examMapper.selectById(id);
-        exam.setExamStatus("2");
+        exam.setExamStatus("2"); //=========================> 关键所在
         exam.setModifyTime(new Date());
         exam.setModifyName("张三");
         examMapper.updateById(exam);
 
-        //初始化当前试卷所在班级所有学生的成绩表(score)
-        List<Student> students = examMapper.getStudentByExamId(exam.getId());
+        //当老师点击开始考试按钮时,我们要初始化当前试卷的当前班级的所有学生的试卷成绩
+        List<Student> students = examMapper.getStudentByExamId(exam.getId()); //找到当前试卷下的所在班级的所有学生
         if(students == null){
             throw new CommonException(ResultCode.NO_STUDENT_IN_CLASSES);
         }else if(students != null && students.size() == 0){
             throw new CommonException(ResultCode.NO_STUDENT_IN_CLASSES);
         }else{
-            for (Student student : students) {
+            for (Student student : students) {  //为每一个学生初始化试卷成绩
                 Score score = Score.builder()
                         .executeTime(new Date())
                         .studentId(student.getId())
@@ -193,7 +193,7 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
                         .singleErrIds("")
                         .singleSucc(0)
                         .singleSuccIds("")
-                        .status("0")
+                        .status("0")  // 初始化0  未交卷1 已交卷为2
                         .build();
                 scoreMapper.insert(score);
             }
@@ -225,15 +225,16 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
     @Override
     public Result stopExam(Exam exam, String nickName) {
 
-        String questionTypeIds = exam.getQuestionTypeIds();
+        String questionTypeIds = exam.getQuestionTypeIds(); //获得当前试卷的题型  1,2,3,4
 
-        //说明试卷中只有选择题  这样的话计算完成后就可以直接结束了, 不需要批阅
+        //判断当前试卷是否有问题和上机题 如果没有 则试卷直接进入结束
         if(!questionTypeIds.contains("3") && !questionTypeIds.contains("4")){
-            exam.setExamStatus("4");
+            exam.setExamStatus("4"); //试卷修改为结束状态
         }
 
+        //判断当前试卷是否有问题或上机题 如果没有 则试卷直接进入结束
         if(questionTypeIds.contains("3") || questionTypeIds.contains("4")){
-            exam.setExamStatus("3");
+            exam.setExamStatus("3"); //试卷修改为批阅中
         }
 
         exam.setModifyName(nickName);
@@ -246,9 +247,9 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
 
     @Override
     public Result readStudentAsks(String id) {
-        List<Student> students = examMapper.getStudentByExamId(id);
-        Exam exam = examMapper.selectById(id);
-        String askJoins = exam.getAskJoins();
+        List<Student> students = examMapper.getStudentByExamId(id); //通过试卷id查询当前试卷的当前班级的所有学生
+        Exam exam = examMapper.selectById(id); //查询试卷
+        String askJoins = exam.getAskJoins(); //获得当前试卷的问答题ids
 
         List<AskVo> result = new ArrayList<>();
 
@@ -260,16 +261,16 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
             askVo.setStudent(student);
             askVo.setUser(user);
 
-            Score score = scoreMapper.getScoreByStudentIdAndExamId(student.getId(),id);
+            Score score = scoreMapper.getScoreByStudentIdAndExamId(student.getId(),id); //通过学生id和试卷id查找当前学生的成绩表
             askVo.setScore(score);
 
-            List<AskResult> list = new ArrayList<>(); //装载单个学生多个简单题答案
+            List<AskResult> list = new ArrayList<>(); //装载单个学生多个简答题答案
             for (String askId : askJoins.split(",")) {
                 AskResult askResult = askResultMapper.getAnswer(askId,id,student.getId()); //通过问答题id，试卷id，学生id查询对应的askResult
                 list.add(askResult);
             }
 
-            askVo.setList(list); //封装单个学生多个简单题答案
+            askVo.setList(list); //封装单个学生多个简答题答案
 
             result.add(askVo); //封装所有学生
         }
@@ -341,7 +342,7 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
 
     @Override
     public Result getQuestionExamList(Exam exam) {
-        String questionTypeIds = exam.getQuestionTypeIds();
+        String questionTypeIds = exam.getQuestionTypeIds(); //试题类型  1,2,3,4
 
         List<QuestionVo> singleList = new ArrayList<>();
         List<QuestionVo> mutipleList = new ArrayList<>();

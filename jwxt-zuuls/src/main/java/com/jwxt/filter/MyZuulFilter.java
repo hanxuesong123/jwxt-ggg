@@ -51,8 +51,8 @@ public class MyZuulFilter extends ZuulFilter {
 
         if (requestURL.toString().contains("teacher/login")) return null;
 
-        //String authorization = request.getHeader("Authorization");
-        String authorization = request.getParameter("token");
+        String authorization = request.getHeader("token");
+        //String authorization = request.getParameter("token");
         if (!StringUtils.isEmpty(authorization) && authorization.startsWith("Bearer")) {
             Claims claims = JwtUtils.getClaims(request);
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -13,6 +14,16 @@ public class MyRedisTemplate {
 
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
+
+
+
+    public boolean hasHashKey(String key,String field){
+        return redisTemplate.opsForHash().hasKey(key,field);
+    }
+
+    public boolean hasStringKey(String key){
+        return redisTemplate.hasKey(key);
+    }
 
     public void setObject(String key,Object o){
         try {

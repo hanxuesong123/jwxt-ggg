@@ -13,7 +13,6 @@
         <module>jwxt-teacher</module>
         <module>jwxt-eureka01</module>
         <module>jwxt-eureka02</module>
-        <module>jwxt-student</module>
         <module>jwxt-zuuls</module>
         <module>jwxt-learner</module>
     </modules>

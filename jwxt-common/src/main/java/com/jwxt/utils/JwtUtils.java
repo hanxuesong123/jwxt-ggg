@@ -58,7 +58,8 @@ public class JwtUtils {
 
 
   public static Claims getClaims(HttpServletRequest request){
-    String authorization = request.getParameter("token");
+    //String authorization = request.getParameter("token");
+    String authorization = request.getHeader("token");
     String token = authorization.replace("Bearer ","");
     Claims currentClaims = JwtUtils.parseJwt(token);
     return currentClaims;

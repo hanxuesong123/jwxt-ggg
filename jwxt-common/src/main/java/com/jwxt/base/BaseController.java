@@ -24,13 +24,15 @@ public class BaseController {
     public void setReqAndRes(HttpServletRequest request,HttpServletResponse response){
         this.response = response;
         this.request = request;
-        Claims claims = JwtUtils.getClaims(request);
-        // Object obj = request.getAttribute("user_claims");
+        this.claims = null;
+        this.userId = "1";
+        this.nickName = "";
+        /*Claims claims = JwtUtils.getClaims(request);
         if(claims != null){
             this.claims = claims;
             this.userId = (String) this.claims.get("userId");
             this.nickName = (String) this.claims.get("nickName");
-        }
+        }*/
     }
 
 }

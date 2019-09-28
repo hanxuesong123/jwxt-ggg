@@ -24,6 +24,7 @@ public class BaseExceptionHandler {
     }else{
       result = new Result(ResultCode.FAIL);
     }
+    e.printStackTrace();
     return result;
   }
 

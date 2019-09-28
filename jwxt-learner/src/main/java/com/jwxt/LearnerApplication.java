@@ -8,6 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableEurekaClient
 @EnableFeignClients
+//@EnableFeignClients({"com.jwxt"})
 public class LearnerApplication {
 
     public static void main(String[] args) {

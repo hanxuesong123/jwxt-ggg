@@ -40,4 +40,3 @@ zuul:
       path: /student/**
       service-id: jwxt-learner
     ignored-services: '*'
-    #ignored-patterns: '/**/find/**'  #忽略这样带有find的接口请求(就是不能再访问带有find的接口

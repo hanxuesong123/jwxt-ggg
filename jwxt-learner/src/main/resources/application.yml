@@ -34,9 +34,9 @@ feign:
   client:
     config:
       default:
-        connectTimeout: 5000
-        readTimeout: 5000
-        loggerLevel: basic
+        connectTimeout: 50000
+        readTimeout: 50000
+        loggerLevel: full
 
 mybatis-plus:
   configuration:
@@ -44,8 +44,12 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath:com/jwxt/*/mapper/*.xml
 
+
 ftp:
   host: 192.168.5.210
   port: 22
   username: root
   password: dmcn@123
+logging:
+  level:
+    com.jwxt: debug

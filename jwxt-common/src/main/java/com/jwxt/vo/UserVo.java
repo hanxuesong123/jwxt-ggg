@@ -35,10 +35,10 @@ public class UserVo implements Serializable {
 
     private Integer score;
 
-    private String status;
+    private String status;  //score
 
     @TableField("nick_name")
-    private String nickName;
+    private String nickName; //user
 
 
 

@@ -11,10 +11,12 @@ import com.jwxt.other.mapper.GeneralMapper;
 import com.jwxt.response.PageResult;
 import com.jwxt.response.Result;
 import com.jwxt.response.ResultCode;
+import com.jwxt.utils.MyRedisTemplate;
 import com.jwxt.utils.SftpUtil;
 import com.jwxt.vo.QuestionCountVo;
 import com.jwxt.vo.QuestionVo;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -54,6 +56,10 @@ public class QuestionServiceImpl implements QuestionService {
     private AskMapper askMapper;
     @Autowired
     private UpperMapper upperMapper;
+
+    @Autowired
+    private MyRedisTemplate myRedisTemplate;
+
 
     @Override
     public Result list(Map<String, Object> map) {
@@ -150,6 +156,7 @@ public class QuestionServiceImpl implements QuestionService {
         questionMapper.insert(question);
 
 
+
         String type = questionVo.getType();
 
         String id = question.getId();
@@ -168,7 +175,17 @@ public class QuestionServiceImpl implements QuestionService {
                 single.setModifyName(nickName);
                 single.setModifyTime(new Date());
                 single.setSingleStatus("1");
-                singleMapper.insert(single);
+                int insert = singleMapper.insert(single);
+
+                if(insert == 1){
+
+                    QuestionVo vo = new QuestionVo();
+
+                    BeanUtils.copyProperties(question,vo);
+                    BeanUtils.copyProperties(single,vo);
+
+                    myRedisTemplate.hSetObject("single",question.getId(),vo);
+                }
                 break;
             case "2":
                 String mutipleAsk = StringUtils.join(questionVo.getMutipleAsk(), ",");
@@ -184,7 +201,16 @@ public class QuestionServiceImpl implements QuestionService {
                         .modifyName(nickName)
                         .modifyTime(new Date())
                         .build();
-                mutipleMapper.insert(mutiple);
+                int insert1 = mutipleMapper.insert(mutiple);
+                if(insert1 == 1){
+
+                    QuestionVo vo = new QuestionVo();
+
+                    BeanUtils.copyProperties(question,vo);
+                    BeanUtils.copyProperties(mutiple,vo);
+
+                    myRedisTemplate.hSetObject("mutiple",question.getId(),vo);
+                }
                 break;
             case "3":
                 Ask ask = Ask.builder()
@@ -194,16 +220,28 @@ public class QuestionServiceImpl implements QuestionService {
                         .modifyName(nickName)
                         .modifyTime(new Date())
                         .build();
-                askMapper.insert(ask);
+                int insert2 = askMapper.insert(ask);
+
+                if(insert2 == 1){
+                    QuestionVo vo = new QuestionVo();
+                    BeanUtils.copyProperties(question,vo);
+                    BeanUtils.copyProperties(ask,vo);
+                    myRedisTemplate.hSetObject("ask",question.getId(),vo);
+                }
                 break;
             case "4":
-
                 Upper upper = upperMapper.selectById(questionVo.getId());
-
                 upper.setModifyName(nickName);
                 upper.setModifyTime(new Date());
                 upper.setUpperContent(questionVo.getUpperContent());
-                upperMapper.updateById(upper);
+                int insert3 = upperMapper.updateById(upper);
+
+                if(insert3 == 1){
+                    QuestionVo vo = new QuestionVo();
+                    BeanUtils.copyProperties(question,vo);
+                    BeanUtils.copyProperties(upper,vo);
+                    myRedisTemplate.hSetObject("upper",question.getId(),vo);
+                }
                 break;
             default:
                 return Result.FAIL();

@@ -26,12 +26,12 @@ public interface QuestionMapper extends BaseMapper<Question> {
     QuestionVo getSingleVOByIdAndType(@Param("singleId")String singleId,@Param("type") String type);
 
     @Select("<script> " +
-            "SELECT sq.*,sm.* " +
+            "SELECT sq.*,sm.*,sm.mutiple_ask as handleMutipleAsk " +
             "FROM st_question sq,st_mutiple sm " +
             "WHERE sq.`id` = sm.`id` " +
             "AND sq.id = #{mutipleId} " +
             "AND sq.type = #{type} " +
-            "ORDER BY sm.`modify_time`  \n" +
+            "ORDER BY sm.`modify_time` " +
             "DESC" +
             " </script>")
     QuestionVo getMutipleVOByIdAndType(@Param("mutipleId")String mutipleId,@Param("type") String type);

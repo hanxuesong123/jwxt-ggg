@@ -21,7 +21,7 @@ public class UserController extends BaseController {
         return userService.getTeacherList(map);
     }
 
-    @RequestMapping(value = "/findTeachers",method = RequestMethod.GET,name = "PROFILE")
+    @RequestMapping(value = "/findTeachers")
     public Result findTeachers(){
         return userService.findTeachers();
     }
@@ -33,6 +33,8 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/findOne/{id}",method = RequestMethod.GET,name = "PROFILE")
     public Result findOne(@PathVariable("id")String id){
+        System.out.println("==================");
+        System.out.println(id);
         return userService.findOne(id);
     }
 
