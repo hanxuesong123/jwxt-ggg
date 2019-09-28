@@ -26,10 +26,16 @@ public class StudentExamController extends BaseController {
         return studentExamService.getList(map);
     }
 
-    //获取考试试卷试题列表
+    //获取考试试卷试题列表(用于学生考试,不带答案)
     @RequestMapping(value = "/getQuestionStudentExamList",method = RequestMethod.POST,name = "PROFILE")
     public Result getQuestionStudentExamList(@RequestBody Exam exam){
         return studentExamService.getQuestionStudentExamList(exam);
+    }
+
+    //获取考试试卷试题列表(用于学生讲解,带答案)
+    @RequestMapping(value = "/getAnswerQuestionStudentList",method = RequestMethod.POST,name = "PROFILE")
+    public Result getAnswerQuestionStudentList(@RequestBody Exam exam){
+        return studentExamService.getAnswerQuestionStudentList(exam);
     }
 
     //当学生点击开始考试按钮时,查看学生的试卷是否是2,如果是2,则不让再次进入考试
@@ -44,12 +50,14 @@ public class StudentExamController extends BaseController {
         return studentExamService.getExamStatus(id);
     }
 
+    //提交试卷
     @RequestMapping(value = "/saveExam",method = RequestMethod.POST,name = "PROFILE")
     public Result saveExam(@RequestBody Map<String,Object>map) throws Exception {
         map.put("userId",JwtUtils.getClaims(request).getId());
         return studentExamService.saveExam(map);
     }
 
+    //保存临时试卷答案到缓存
     @RequestMapping(value = "/saveTempAnswer",method = RequestMethod.POST,name = "PROFILE")
     public Result saveTempAnswer(@RequestBody Map<String,Object>map) throws Exception {
         map.put("userId",JwtUtils.getClaims(request).getId());

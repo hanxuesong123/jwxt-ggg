@@ -23,4 +23,6 @@ public interface StudentExamService {
     Result echoTempAnswer(String examId, String userId);
 
     Result goBackStudentExamData(Exam exam,String userId);
+
+    Result getAnswerQuestionStudentList(Exam exam);
 }

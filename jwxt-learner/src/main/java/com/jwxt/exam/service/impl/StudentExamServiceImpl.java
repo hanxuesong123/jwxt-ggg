@@ -390,11 +390,10 @@ public class StudentExamServiceImpl implements StudentExamService {
             String singleJoins = exam.getSingleJoins();
             String[] singleIdArray = singleJoins.split(",");
 
-            QueryWrapper<SingleResult> queryWrapper = new QueryWrapper();
-
             List<SingleResult> list = new ArrayList<>();
 
             for (String singleId : singleIdArray) {
+                QueryWrapper<SingleResult> queryWrapper = new QueryWrapper();
                 queryWrapper.eq("single_id",singleId);
                 queryWrapper.eq("exam_id",exam.getId());
                 queryWrapper.eq("student_id",userId);
@@ -409,12 +408,12 @@ public class StudentExamServiceImpl implements StudentExamService {
             String mutipleJoins = exam.getMutipleJoins();
             String[] mutipleIdArray = mutipleJoins.split(",");
 
-            QueryWrapper<MutipleResult> queryWrapper = new QueryWrapper<>();
+
 
             List<MutipleResult> list = new ArrayList<>();
 
             for (String mutipleId : mutipleIdArray) {
-
+                QueryWrapper<MutipleResult> queryWrapper = new QueryWrapper<>();
                 queryWrapper.eq("exam_id",exam.getId());
                 queryWrapper.eq("student_id",userId);
                 queryWrapper.eq("mutiple_id",mutipleId);
@@ -436,9 +435,10 @@ public class StudentExamServiceImpl implements StudentExamService {
 
             List<AskResult> list = new ArrayList<>();
 
-            QueryWrapper<AskResult> queryWrapper = new QueryWrapper<>();
+
 
             for (String askId : askIdArray) {
+                QueryWrapper<AskResult> queryWrapper = new QueryWrapper<>();
                 queryWrapper.eq("ask_id",askId);
                 queryWrapper.eq("exam_id",exam.getId());
                 queryWrapper.eq("student_id",userId);
@@ -455,6 +455,12 @@ public class StudentExamServiceImpl implements StudentExamService {
         goBackVo.setScore(score);
 
         return new Result(ResultCode.SUCCESS,goBackVo);
+    }
+
+    @Override
+    public Result getAnswerQuestionStudentList(Exam exam) {
+        Result result = userClient.getQuestionExamTeacherList(exam);
+        return result;
     }
 
 

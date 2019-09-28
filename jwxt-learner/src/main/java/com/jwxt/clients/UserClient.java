@@ -1,5 +1,6 @@
 package com.jwxt.clients;
 
+import com.jwxt.entity.academic.Exam;
 import com.jwxt.response.Result;
 import com.jwxt.vo.QuestionVo;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -22,6 +23,9 @@ public interface UserClient {
 
     @RequestMapping(value = "/exam/readStudentAsks/{id}",method = RequestMethod.GET,name = "PROFILE")
     public Result readStudentAsks(@PathVariable("id") String id); //不行
+
+    @RequestMapping(value = "/exam/getQuestionExamTeacherList",method = RequestMethod.POST,name = "API-EXAM-EXPLAIN")
+    public Result getQuestionExamTeacherList(@RequestBody Exam exam);
 
     @RequestMapping(value = "/send/question/getSingleVOByIdAndType",method = RequestMethod.POST,name = "PROFILE")
     public QuestionVo getSingleVOByIdAndType(@RequestParam("id")String id, @RequestParam("type") String type);
