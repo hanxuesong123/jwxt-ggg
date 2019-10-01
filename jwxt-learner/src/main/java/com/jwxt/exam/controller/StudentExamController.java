@@ -5,10 +5,18 @@ import com.jwxt.entity.academic.Exam;
 import com.jwxt.exam.service.StudentExamService;
 import com.jwxt.exceptions.CommonException;
 import com.jwxt.response.Result;
+import com.jwxt.response.ResultCode;
 import com.jwxt.utils.JwtUtils;
 import com.netflix.discovery.converters.Auto;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.netflix.hystrix.contrib.javanica.conf.HystrixPropertiesManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.annotation.SessionScope;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;

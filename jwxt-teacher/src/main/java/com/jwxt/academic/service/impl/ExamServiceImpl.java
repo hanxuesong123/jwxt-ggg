@@ -70,6 +70,7 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
         if(map.get("examType") != null) queryWrapper.eq("exam_type",map.get("examType").toString());
         if(map.get("examStatus") != null) queryWrapper.eq("exam_status",map.get("examStatus").toString());
 
+        queryWrapper.ne("question_type_ids","4");
         IPage<Exam> result = examMapper.selectPage(iPage, queryWrapper);
         PageResult<Exam> pageResult = new PageResult<>(result.getTotal(),result.getRecords());
         return new Result(ResultCode.SUCCESS,pageResult);

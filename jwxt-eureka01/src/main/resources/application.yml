@@ -22,7 +22,7 @@ eureka:
     fetch-registry: false #是否拉取服务表
     register-with-eureka: false  # 是否把当前项目注册到eureka
     service-url:
-      defaultZone: http://localhost:56798/eureka/  #默认注册地址
+      defaultZone: http://localhost:56798/eureka/,http://localhost:56799/eureka/  #默认注册地址
   server:
     enable-self-preservation: false  #eureka的自我保护机制关闭(false为关闭,true开启)  (测试环境关闭, 生产环境开启 )
 

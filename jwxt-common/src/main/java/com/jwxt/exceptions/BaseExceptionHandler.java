@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@ControllerAdvice //controller层的增强器: 捕获controller层抛出的异常
+//@ControllerAdvice //controller层的增强器: 捕获controller层抛出的异常
 public class BaseExceptionHandler {
 
 

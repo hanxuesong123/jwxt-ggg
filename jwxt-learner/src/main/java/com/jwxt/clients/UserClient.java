@@ -1,28 +1,30 @@
 package com.jwxt.clients;
 
+import com.jwxt.clients.fallback.UserClientFallback;
+import com.jwxt.clients.fallback.UserClientFallbackFactory;
 import com.jwxt.entity.academic.Exam;
 import com.jwxt.response.Result;
 import com.jwxt.vo.QuestionVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "JWXT-TEACHER")
+@FeignClient(name = "JWXT-TEACHER",fallbackFactory = UserClientFallbackFactory.class)//fallback = UserClientFallback.class)
 public interface UserClient {
 
     @RequestMapping(value = "/user/findOne/{id}",method = RequestMethod.GET,name = "PROFILE")
-    public Result findOne(@PathVariable("id")String id); //不行
+    public Result findOne(@PathVariable("id")String id);
 
     @RequestMapping(value = "/general/findGenerals",method = RequestMethod.GET,name = "PROFILE")
-    public Result findGenerals(); //可以
+    public Result findGenerals();
 
     @RequestMapping(value = "/user/findTeachers")
-    public Result findTeachers(); //不行
+    public Result findTeachers();
 
     @RequestMapping(value = "/department/findDepartments",method = RequestMethod.GET)
-    public Result findDepartments(); //可以
+    public Result findDepartments();
 
     @RequestMapping(value = "/exam/readStudentAsks/{id}",method = RequestMethod.GET,name = "PROFILE")
-    public Result readStudentAsks(@PathVariable("id") String id); //不行
+    public Result readStudentAsks(@PathVariable("id") String id);
 
     @RequestMapping(value = "/exam/getQuestionExamTeacherList",method = RequestMethod.POST,name = "API-EXAM-EXPLAIN")
     public Result getQuestionExamTeacherList(@RequestBody Exam exam);

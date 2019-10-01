@@ -1,7 +1,6 @@
 server:
   port: 56712
 
-
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
@@ -15,6 +14,24 @@ spring:
       max-request-size: -1
   application:
     name: jwxt-learner #指定服务名
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:com/jwxt/*/mapper/*.xml
+
+
+ftp:
+  host: 192.168.5.210
+  port: 22
+  username: root
+  password: dmcn@123
+
+logging:
+  level:
+    com.jwxt: debug
+
 
 eureka:
   client:
@@ -37,19 +54,29 @@ feign:
         connectTimeout: 50000
         readTimeout: 50000
         loggerLevel: full
-
-mybatis-plus:
-  configuration:
-    map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  mapper-locations: classpath:com/jwxt/*/mapper/*.xml
+  hystrix:
+    enabled: true
 
 
-ftp:
-  host: 192.168.5.210
-  port: 22
-  username: root
-  password: dmcn@123
-logging:
-  level:
-    com.jwxt: debug
+# 配置断路器
+hystrix:
+  command:
+    default:
+      circuitBreaker:
+        enabled: true   #启动断路器
+        requestVolumeThreshold: 10  #请求数达到后才计算
+        sleepWindowInMilliseconds: 10000  #休眠时间
+        errorThresholdPercentage: 50    #错误率
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000  #设置请求超时时间（默认是一秒） 超时后会走后备方法
+
+
+
+# 开启了所有健康监测的访问接口，默认只开启了health和info，也开启了hystrix的仪表盘访问
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

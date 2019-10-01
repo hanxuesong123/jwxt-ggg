@@ -19,6 +19,7 @@ public interface ExamMapper extends BaseMapper<Exam> {
             "AND c.`id`=ec.`classes_id` " +
             "AND ec.`exam_id`=e.`id` " +
             "AND u.`id`=s.`id` " +
+            "AND e.question_type_ids != '4' " +
             "AND s.`id`= #{userId} " +
             " </script>")
     long getCountByStudentId(@Param("userId") String userId);
@@ -32,6 +33,7 @@ public interface ExamMapper extends BaseMapper<Exam> {
             "AND ec.`exam_id`=e.`id` " +
             "AND u.`id`=s.`id` " +
             "AND s.`id`= #{userId} " +
+            "AND e.question_type_ids != '4' " +
             "ORDER BY e.`exam_time` DESC ,e.`exam_type`,e.`exam_status` DESC " +
             "LIMIT #{page},#{size}" +
             " </script>")

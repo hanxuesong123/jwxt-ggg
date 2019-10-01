@@ -71,15 +71,10 @@ public class ExamController extends BaseController {
         return examService.analysisExam(exam);
     }
 
-    //试卷讲解
-  /*  @RequestMapping(value = "/showObjectExam",method = RequestMethod.POST,name = "API-EXAM-EXPLAIN")
-    public Result showObjectExam(@RequestBody Exam exam){
-        return examService.showObjectExam(exam);
-    }
-*/
     //试卷讲解时的数据集合
     @RequestMapping(value = "/getQuestionExamTeacherList",method = RequestMethod.POST,name = "API-EXAM-EXPLAIN")
     public Result getQuestionExamTeacherList(@RequestBody Exam exam){
+        int i = 1 / 0;
         return examService.getQuestionExamList(exam);
     }
 
