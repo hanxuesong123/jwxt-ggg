@@ -40,3 +40,29 @@ zuul:
       path: /student/**
       service-id: jwxt-learner
     ignored-services: '*'
+
+
+
+# 配置断路器
+hystrix:
+  command:
+    default:
+      circuitBreaker:
+        enabled: true   #启动断路器
+        requestVolumeThreshold: 10  #请求数达到后才计算
+        sleepWindowInMilliseconds: 10000  #休眠时间
+        errorThresholdPercentage: 50    #错误率
+      execution:
+        isolation:
+          thread:   #熔断策略:线程
+            timeoutInMilliseconds: 5000  #设置请求超时时间（默认是一秒） 超时后会走后备方法
+
+
+
+# 开启了所有健康监测的访问接口，默认只开启了health和info，也开启了hystrix的仪表盘访问
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+

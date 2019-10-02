@@ -40,6 +40,10 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: learner #在注册中心显示的微服务的名称
+    metadata-map:
+      cluster: serve
+    status-page-url: http://${spring.cloud.client.ip-address}:${server.port}/swagger-ui.html
+
 
 ribbon:
   eureka:
@@ -69,7 +73,7 @@ hystrix:
         errorThresholdPercentage: 50    #错误率
       execution:
         isolation:
-          thread:
+          thread:   #熔断策略:线程
             timeoutInMilliseconds: 5000  #设置请求超时时间（默认是一秒） 超时后会走后备方法
 
 
@@ -80,3 +84,6 @@ management:
     web:
       exposure:
         include: '*'
+swagger:
+  authorization:
+    key-name: token

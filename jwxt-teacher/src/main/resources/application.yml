@@ -42,7 +42,6 @@ ftp:
   username: root
   password: dmcn@123
 
-
 eureka:
   client:
     service-url:

@@ -5,31 +5,25 @@ import com.jwxt.entity.academic.Exam;
 import com.jwxt.exam.service.StudentExamService;
 import com.jwxt.exceptions.CommonException;
 import com.jwxt.response.Result;
-import com.jwxt.response.ResultCode;
 import com.jwxt.utils.JwtUtils;
-import com.netflix.discovery.converters.Auto;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-import com.netflix.hystrix.contrib.javanica.conf.HystrixPropertiesManager;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.annotation.SessionScope;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/exam/")
+@Api(value = "学生考试接口")
 public class StudentExamController extends BaseController {
 
     @Autowired
     private StudentExamService studentExamService;
 
     @RequestMapping(value = "/getList",method = RequestMethod.POST,name = "API-STUDENT-EXAM-LIST")
-    public Result getList(@RequestBody Map<String,Object> map) throws CommonException {
+    @ApiOperation(value = "试卷列表",notes = "获取学生试卷列表")
+    public Result getList(@ApiParam(value = "查询试卷列表参数") @RequestBody Map<String,Object> map) throws CommonException {
         map.put("userId", JwtUtils.getClaims(request).getId());
         return studentExamService.getList(map);
     }
