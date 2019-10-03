@@ -15,6 +15,20 @@ public interface QuestionMapper extends BaseMapper<Question> {
 
 
     @Select("<script> " +
+            "SELECT sq.*,su.* " +
+            "FROM st_question sq,st_upper su " +
+            "WHERE sq.`id` = su.`id` " +
+            "AND sq.id = #{upperId} " +
+            "AND sq.type = #{type} " +
+            "ORDER BY su.`modify_time` " +
+            "DESC " +
+            " </script>")
+    QuestionVo getUpperVOByIdAndType(@Param("upperId")String upperId,@Param("type") String type);
+
+
+
+
+    @Select("<script> " +
             "SELECT sq.*,ss.* " +
             "FROM st_question sq,st_single ss " +
             "WHERE sq.`id` = ss.`id` " +

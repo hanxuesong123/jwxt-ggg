@@ -17,7 +17,8 @@ public enum ResultCode {
   NO_STUDENT_IDENTITY(false,66666,"非学生身份无法查看"),
   NO_STUDENT_IN_CLASSES(false,66665,"所属班级没有学生"),
 
-  EXAM_IS_COMMIT(false,30101,"试卷已提交");
+  EXAM_IS_COMMIT(false,30101,"试卷已提交"),
+  SCORE_IS_COMMIT(false,30102,"无法再次提交试卷");
 
   int code;
   String message;

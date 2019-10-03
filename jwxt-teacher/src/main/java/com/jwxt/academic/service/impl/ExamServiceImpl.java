@@ -354,9 +354,18 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
 
         Integer totalScore = score.getScore();
 
-        score.setScore(askScore + totalScore);
+        Score target = scoreMapper.selectById(score.getId());
+
+        Integer upperScore = score.getUpperScore();
+
+        if(target.getUpperScore() != 0 && upperScore > 0){ //说明一个学生试卷多次提交分数
+            return new Result(ResultCode.SCORE_IS_COMMIT);
+        }
+
+        score.setScore(upperScore + askScore + totalScore);
 
         scoreMapper.updateById(score);
+
         return Result.SUCCESS();
     }
 
@@ -378,10 +387,6 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
         return new Result(ResultCode.SUCCESS,userVos);
     }
 
- /*   @Override
-    public Result showObjectExam(Exam exam) {
-        return null;
-    }*/
 
     @Override
     public Result getQuestionExamList(Exam exam) {
@@ -390,6 +395,8 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
         List<QuestionVo> singleList = new ArrayList<>();
         List<QuestionVo> mutipleList = new ArrayList<>();
         List<QuestionVo> askList = new ArrayList<>();
+        List<QuestionVo> upperList = new ArrayList<>();
+
 
         if(questionTypeIds.contains("1")){
             String singleJoins = exam.getSingleJoins();
@@ -415,11 +422,21 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
             }
         }
 
+
+        if(questionTypeIds.contains("4")){
+            String upperJoins = exam.getUpperJoins();
+            for (String upperId : upperJoins.split(",")){
+                QuestionVo upper = questionMapper.getUpperVOByIdAndType(upperId, "4");
+                upperList.add(upper);
+            }
+        }
+
+
         ExamVo examVo = new ExamVo();
         examVo.setAskList(askList);
         examVo.setMutipleList(mutipleList);
         examVo.setSingleList(singleList);
-
+        examVo.setUpperList(upperList);
         return new Result(ResultCode.SUCCESS,examVo);
     }
 
