@@ -12,13 +12,15 @@ public interface ExamService {
 
     Result save(Exam exam,String nickName)throws CommonException;
 
-    Result startExam(String id) throws CommonException;
+    Result startExam(String id,String nickName) throws CommonException;
 
     Result showExam(Exam exam);
 
     Result stopExam(Exam exam, String nickName);
 
     Result readStudentAsks(String id);
+
+    Result readStudentUppers(Exam exam);
 
     Result lastExam(Score score);
 
@@ -29,4 +31,6 @@ public interface ExamService {
     /*Result showObjectExam(Exam exam);*/
 
     Result getQuestionExamList(Exam exam);
+
+
 }

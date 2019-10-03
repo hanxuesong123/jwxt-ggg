@@ -6,6 +6,7 @@ import com.jwxt.entity.academic.Exam;
 import com.jwxt.entity.academic.Score;
 import com.jwxt.exceptions.CommonException;
 import com.jwxt.response.Result;
+import com.jwxt.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,7 @@ public class ExamController extends BaseController {
     //开始考试
     @RequestMapping(value = "/startExam/{id}",method = RequestMethod.GET,name = "API-EXAM-START")
     public Result startExam(@PathVariable("id") String id) throws CommonException {
-        return examService.startExam(id);
+        return examService.startExam(id, JwtUtils.getClaims(request).get("nickName").toString());
     }
 
     //已交/未交
@@ -52,6 +53,12 @@ public class ExamController extends BaseController {
     public Result readStudentAsks(@PathVariable("id") String id){
         return examService.readStudentAsks(id);
     }
+
+    @RequestMapping(value = "/readStudentUppers",method = RequestMethod.POST,name = "PROFILE")
+    public Result readStudentUppers(@RequestBody Exam exam){
+        return examService.readStudentUppers(exam);
+    }
+
 
     //问答评分
     @RequestMapping(value = "/lastExam", method = RequestMethod.PUT,name = "PROFILE")

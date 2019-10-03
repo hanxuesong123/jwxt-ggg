@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ExamMapper extends BaseMapper<Exam> {
@@ -19,10 +20,11 @@ public interface ExamMapper extends BaseMapper<Exam> {
             "AND c.`id`=ec.`classes_id` " +
             "AND ec.`exam_id`=e.`id` " +
             "AND u.`id`=s.`id` " +
-            "AND e.question_type_ids != '4' " +
-            "AND s.`id`= #{userId} " +
+            " <if test='map.questionType == 1'> AND e.question_type_ids != '4' </if> " +
+            " <if test='map.questionType == 2'> AND e.question_type_ids = '4' </if> " +
+            "AND s.`id`= #{map.userId} " +
             " </script>")
-    long getCountByStudentId(@Param("userId") String userId);
+    long getCountByStudentId( @Param("map")Map<String,Object>map);
 
     @Select("<script> " +
             "SELECT e.* " +
@@ -32,11 +34,12 @@ public interface ExamMapper extends BaseMapper<Exam> {
             "AND c.`id`=ec.`classes_id` " +
             "AND ec.`exam_id`=e.`id` " +
             "AND u.`id`=s.`id` " +
-            "AND s.`id`= #{userId} " +
-            "AND e.question_type_ids != '4' " +
+            "AND s.`id`= #{map.userId} " +
+            " <if test='map.questionType == 1'> AND e.question_type_ids != '4' </if> " +
+            " <if test='map.questionType == 2'> AND e.question_type_ids = '4' </if> " +
             "ORDER BY e.`exam_time` DESC ,e.`exam_type`,e.`exam_status` DESC " +
             "LIMIT #{page},#{size}" +
             " </script>")
-    List<Exam> getExamListByStudentId(@Param("page")Integer page, @Param("size")Integer size, @Param("userId")String userId);
+    List<Exam> getExamListByStudentId(@Param("page")Integer page, @Param("size")Integer size, @Param("map")Map<String,Object>map);
 
 }

@@ -4,6 +4,7 @@ import com.jwxt.entity.academic.Exam;
 import com.jwxt.exceptions.CommonException;
 import com.jwxt.response.Result;
 
+import java.io.InputStream;
 import java.util.Map;
 
 public interface StudentExamService {
@@ -25,4 +26,8 @@ public interface StudentExamService {
     Result goBackStudentExamData(Exam exam,String userId);
 
     Result getAnswerQuestionStudentList(Exam exam);
+
+    Result getUpper(Exam exam);
+
+    Result upload(String originalFilename, InputStream inputStream, String examId, String upperIds,String studentId);
 }

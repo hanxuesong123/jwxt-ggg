@@ -18,6 +18,7 @@ import com.jwxt.response.Result;
 import com.jwxt.response.ResultCode;
 import com.jwxt.utils.MyRedisTemplate;
 import com.jwxt.vo.*;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,12 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UpperResultMapper upperResultMapper;
+
+    @Autowired
+    private UpperMapper upperMapper;
 
     @Autowired
     private AskResultMapper askResultMapper;
@@ -166,11 +173,11 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
     }
 
     @Override
-    public Result startExam(String id) throws CommonException {
+    public Result startExam(String id,String nickName) throws CommonException {
         Exam exam = examMapper.selectById(id);
         exam.setExamStatus("2"); //=========================> 关键所在
         exam.setModifyTime(new Date());
-        exam.setModifyName("张三");
+        exam.setModifyName(nickName);
         examMapper.updateById(exam);
 
         //当老师点击开始考试按钮时,我们要初始化当前试卷的当前班级的所有学生的试卷成绩
@@ -293,6 +300,51 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
         askVoResult.setList(result);
 
         return new Result(ResultCode.SUCCESS,askVoResult);
+    }
+
+    @Override
+    public Result readStudentUppers(Exam exam) {
+
+        List<Student> students = examMapper.getStudentByExamId(exam.getId()); //通过试卷id查询当前试卷的当前班级的所有学生
+        String upperJoins = exam.getUpperJoins();
+        List<UpperVo> result = new ArrayList<>();
+
+        for (Student student : students) {
+            UpperVo upperVo = new UpperVo(); //每一个upperVo相当于一个学生的上机题信息
+
+            User user = userMapper.selectById(student.getId());
+
+            upperVo.setStudent(student);
+            upperVo.setUser(user);
+            //通过学生id和试卷id查找当前学生的成绩表
+            Score score = scoreMapper.getScoreByStudentIdAndExamId(student.getId(),exam.getId());
+            upperVo.setScore(score);
+
+            List<UpperResult> list = new ArrayList<>(); //装载单个学生多个上机题答案
+            for (String upperId : upperJoins.split(",")) {
+               //通过上机题id，试卷id，学生id查询对应的upperResult
+                UpperResult upperResult = upperResultMapper.getAnswer(upperId,exam.getId(),student.getId());
+                list.add(upperResult);
+            }
+
+            upperVo.setList(list); //封装单个学生多个简答题答案
+
+            result.add(upperVo); //封装所有学生
+        }
+
+
+        List<Upper> uppers = new ArrayList<>();
+
+        for (String upperId : upperJoins.split(",")) {
+            Upper upper = upperMapper.selectById(upperId);
+            uppers.add(upper);
+        }
+
+        UpperVoResult upperVoResult = new UpperVoResult();
+        upperVoResult.setList(result);
+        upperVoResult.setUppers(uppers);
+
+        return new Result(ResultCode.SUCCESS,upperVoResult);
     }
 
     @Override

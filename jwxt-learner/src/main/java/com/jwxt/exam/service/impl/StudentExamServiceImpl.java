@@ -12,21 +12,34 @@ import com.jwxt.response.PageResult;
 import com.jwxt.response.Result;
 import com.jwxt.response.ResultCode;
 import com.jwxt.utils.MyRedisTemplate;
+import com.jwxt.utils.SftpUtil;
 import com.jwxt.vo.ExamStudentVo;
 import com.jwxt.vo.GoBackVo;
 import com.jwxt.vo.QuestionStudentVo;
 import com.jwxt.vo.QuestionVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
 import java.util.*;
 
 @Service
 @Transactional
 public class StudentExamServiceImpl implements StudentExamService {
+
+    @Value("${ftp.host}")
+    private String FTP_HOST;
+    @Value("${ftp.port}")
+    private String FTP_PORT;
+    @Value("${ftp.username}")
+    private String FTP_USERNAME;
+    @Value("${ftp.password}")
+    private String FTP_PASSWORD;
+
 
     @Autowired
     private ExamMapper examMapper;
@@ -43,6 +56,8 @@ public class StudentExamServiceImpl implements StudentExamService {
     @Autowired
     private MutipleMapper mutipleMapper;
 
+    @Autowired
+    private UpperMapper upperMapper;
 
     @Autowired
     private SingleResultMapper singleResultMapper;
@@ -58,6 +73,9 @@ public class StudentExamServiceImpl implements StudentExamService {
 
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
+
+    @Autowired
+    private UpperResultMapper upperResultMapper;
 
 
     @Override
@@ -79,9 +97,9 @@ public class StudentExamServiceImpl implements StudentExamService {
         }
 
 
-        List<Exam> list = examMapper.getExamListByStudentId((page - 1) * size, size , userId);
+        List<Exam> list = examMapper.getExamListByStudentId((page - 1) * size, size , map);
 
-        long total = examMapper.getCountByStudentId(userId);
+        long total = examMapper.getCountByStudentId(map);
 
         PageResult<Exam> pageResult = new PageResult<>(total,list);
 
@@ -461,6 +479,56 @@ public class StudentExamServiceImpl implements StudentExamService {
     public Result getAnswerQuestionStudentList(Exam exam) {
         Result result = userClient.getQuestionExamTeacherList(exam);
         return result;
+    }
+
+    @Override
+    public Result getUpper(Exam exam) {
+
+        List<Upper> list = new ArrayList<>();
+
+        String upperJoins = exam.getUpperJoins();
+        for (String upperId : upperJoins.split(",")) {
+            Upper upper = upperMapper.selectById(upperId);
+            list.add(upper);
+        }
+        return new Result(ResultCode.SUCCESS,list);
+    }
+
+    @Override
+    public Result upload(String originalFilename, InputStream inputStream, String examId, String upperIds,String studentId) {
+
+        String newFileName = UUID.randomUUID().toString() + originalFilename.substring(originalFilename.lastIndexOf("."));
+
+        newFileName = newFileName.replace("-", "");
+
+        //SftpUtil sftpUtil = new SftpUtil(FTP_HOST, Integer.parseInt(FTP_PORT), FTP_USERNAME, FTP_PASSWORD);
+
+
+        //TODO:联网后打开
+        //sftpUtil.upload("/var/ftp/pub", newFileName, inputStream);
+
+        String url = "ftp://".concat(FTP_HOST).concat(":21/pub/").concat(newFileName);
+
+        for (String upperId : upperIds.split(",")) {
+            UpperResult upperResult = UpperResult.builder()
+                    .examId(examId)
+                    .studentId(studentId)
+                    .upperId(upperId)
+                    .zipUrl(url)
+                    .build();
+            upperResultMapper.insert(upperResult);
+        }
+
+        QueryWrapper<Score> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("student_id",studentId);
+        queryWrapper.eq("exam_id",examId);
+
+        Score score = scoreMapper.selectOne(queryWrapper);
+
+        score.setStatus("2");
+        scoreMapper.updateById(score);
+
+        return Result.SUCCESS();
     }
 
 

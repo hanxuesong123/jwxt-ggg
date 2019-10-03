@@ -11,10 +11,13 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/exam/")
+@RequestMapping("/exam")
 @Api(value = "学生考试接口")
 public class StudentExamController extends BaseController {
 
@@ -76,6 +79,18 @@ public class StudentExamController extends BaseController {
     @RequestMapping(value = "/goBackStudentExamData",method = RequestMethod.POST,name = "PROFILE")
     public Result goBackStudentExamData(@RequestBody Exam exam){
         return studentExamService.goBackStudentExamData(exam,JwtUtils.getClaims(request).getId());
+    }
+
+    //获取上机题内容
+    @RequestMapping(value = "/getUpper",method = RequestMethod.POST,name = "PROFILE")
+    public Result getUpper(@RequestBody Exam exam){
+        return studentExamService.getUpper(exam);
+    }
+
+    //上传上机题学生答案视频
+    @RequestMapping(value = "/upload/{examId}/{upperIds}",method = RequestMethod.POST,name = "PROFILE")
+    public Result upload(@RequestParam("file") MultipartFile file,@PathVariable("examId")String examId,@PathVariable("upperIds")String upperIds) throws IOException {
+        return studentExamService.upload(file.getOriginalFilename(),file.getInputStream(),examId,upperIds,JwtUtils.getClaims(request).getId());
     }
 
 }
