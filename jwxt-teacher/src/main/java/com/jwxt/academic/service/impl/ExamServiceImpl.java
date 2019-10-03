@@ -369,20 +369,6 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
 
         examMapper.updateById(exam);
 
-
-/*    List<Student> students = examMapper.getStudentByExamId(exam.getId());
-
-    if(students != null && students.size() > 0){
-      for (Student student : students) {
-        Score score = scoreMapper.getScoreByStudentIdAndExamId(student.getId(), exam.getId());
-        String status = score.getStatus();
-        if(!"0".equals(status)){
-          score.setStatus("2");
-          scoreMapper.updateById(score);
-        }
-      }
-    }*/
-
         return Result.SUCCESS();
     }
 

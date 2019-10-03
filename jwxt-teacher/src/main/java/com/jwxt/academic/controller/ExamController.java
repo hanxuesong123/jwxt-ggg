@@ -69,7 +69,7 @@ public class ExamController extends BaseController {
     //结束考试
     @RequestMapping(value = "/endExam",method = RequestMethod.POST,name = "API-EXAM-END")
     public Result endExam(@RequestBody Exam exam){
-        return examService.endExam(exam,super.nickName);
+        return examService.endExam(exam,JwtUtils.getClaims(request).get("nickName").toString());
     }
 
     //试卷分析
