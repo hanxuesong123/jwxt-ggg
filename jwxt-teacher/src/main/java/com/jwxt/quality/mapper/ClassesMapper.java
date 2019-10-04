@@ -2,6 +2,7 @@ package com.jwxt.quality.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jwxt.entity.quality.Classes;
+import com.jwxt.entity.quality.Student;
 import com.jwxt.entity.quality.TeacherClasses;
 import org.apache.ibatis.annotations.*;
 
@@ -47,4 +48,12 @@ public interface ClassesMapper extends BaseMapper<Classes> {
     @Delete("delete from sys_teacher_classes where teacher_id = #{teacherId} and classes_id = #{classesId}")
     void deleteTeacherClasses(@Param("teacherId") String teacherId,@Param("classesId") String classesId);
 
+    @Select("<script> " +
+            "SELECT s.* " +
+            "FROM sys_student s,sys_student_classes sc,sys_classes c " +
+            "WHERE c.`id` = sc.`classes_id` " +
+            "AND sc.`student_id` = s.`id` " +
+            "AND c.`id` = #{classesId} " +
+            " </script>")
+    List<Student> getStudentList(@Param("classesId") String classesId);
 }

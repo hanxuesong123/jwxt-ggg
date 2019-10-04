@@ -24,6 +24,15 @@ public class UserVo implements Serializable {
     @TableField("single_err")
     private Integer singleErr;
 
+    @TableField("single_score")
+    private Integer singleScore;
+
+    @TableField("single_succ_ids")
+    private String singleSuccIds;
+
+    @TableField("single_err_ids")
+    private String singleErrIds;
+
     @TableField("multiple_succ")
     private Integer multipleSucc;
 
@@ -32,6 +41,13 @@ public class UserVo implements Serializable {
 
     @TableField("multiple_score")
     private Integer multipleScore;
+
+    @TableField("multiple_succ_ids")
+    private String multipleSuccIds;
+
+    @TableField("multiple_err_ids")
+    private String multipleErrIds;
+
 
     private Integer score;
 

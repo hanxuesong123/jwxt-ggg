@@ -16,6 +16,7 @@ import com.jwxt.quality.mapper.StudentClassesMapper;
 import com.jwxt.response.PageResult;
 import com.jwxt.response.Result;
 import com.jwxt.response.ResultCode;
+import com.jwxt.utils.DateUtils;
 import com.jwxt.utils.MyRedisTemplate;
 import com.jwxt.vo.*;
 
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -93,6 +95,43 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
     public Result save(Exam exam,String nickName) throws CommonException {
 
         try {
+            String examType = exam.getExamType(); //试卷的类型
+            String classId = exam.getClassId();
+            Date examTime = exam.getExamTime();
+            String questionTypeIds = StringUtils.join(exam.getQuestionTypeIdsArray(),",");
+            if("1".equals(examType)){ //日测:
+                if(questionTypeIds.contains("4")){
+                    Exam targetExam = examMapper.getExamByUpperExamTypeAndClassIdAndExamTime(examType,classId,examTime);
+                    if(targetExam != null) throw new CommonException(ResultCode.EXAM_DAY_IS_ALWAYS);
+                }else{
+                    Exam targetExam = examMapper.getExamByExamTypeAndClassIdAndExamTime(examType,classId,examTime);
+                    if(targetExam != null) throw new CommonException(ResultCode.EXAM_DAY_IS_ALWAYS);
+                }
+            }else if("2".equals(examType)){//周测:
+                String timeInterval = DateUtils.getTimeInterval(examTime);
+                String[] split = timeInterval.split(",");
+                Date start = new SimpleDateFormat("yyyy-MM-dd").parse(split[0]);
+                Date end = new SimpleDateFormat("yyyy-MM-dd").parse(split[1]);
+                if(questionTypeIds.contains("4")){
+                    List<Exam> targetExam = examMapper.getWeekUpperExamByExamTypeAndClassIdAndStartAndEnd(examType,classId,start,end);
+                    if(targetExam != null && targetExam.size() == 1) throw new CommonException(ResultCode.EXAM_WEEK_IS_ALWAYS);
+                }else{
+                    List<Exam> targetExam = examMapper.getWeekExamByExamTypeAndClassIdAndStartAndEnd(examType,classId,start,end);
+                    if(targetExam != null && targetExam.size() == 1 ) throw new CommonException(ResultCode.EXAM_WEEK_IS_ALWAYS);
+                }
+            }else if("3".equals(examType)){//月考
+                Date start = DateUtils.getFirstDayDateOfMonth(examTime);
+                Date end = DateUtils.getLastDayOfMonth(examTime);
+                if(questionTypeIds.contains("4")){
+                    List<Exam> targetExam = examMapper.getWeekUpperExamByExamTypeAndClassIdAndStartAndEnd(examType,classId,start,end);
+                    if(targetExam != null && targetExam.size() == 1) throw new CommonException(ResultCode.EXAM_DAY_IS_ALWAYS);
+                }else{
+                    List<Exam> targetExam = examMapper.getWeekExamByExamTypeAndClassIdAndStartAndEnd(examType,classId,start,end);
+                    if(targetExam != null && targetExam.size() == 1) throw new CommonException(ResultCode.EXAM_DAY_IS_ALWAYS);
+                }
+            }
+
+
             exam.setModifyName(nickName);
             exam.setModifyTime(new Date());
             exam.setExamStatus("1");
@@ -109,7 +148,7 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
 
 
             //处理所考班级
-            String classId = exam.getClassId();
+
             Classes classes = classesMapper.selectById(classId);
             exam.setClassName(classes.getClassName());
 

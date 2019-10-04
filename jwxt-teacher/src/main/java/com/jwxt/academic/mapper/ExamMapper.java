@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
@@ -54,6 +55,8 @@ public interface ExamMapper extends BaseMapper<Exam> {
     @Select("<script>select  " +
             "       u.nick_name as nickName,  " +
             "       sc.status,sc.score,sc.single_succ as singleSucc, " +
+            "       sc.single_score as singleScore, sc.single_succ_ids as singleSuccIds,sc.single_err_ids as singleErrIds, " +
+            "       sc.multiple_succ_ids as multipleSuccIds, sc.multiple_err_ids as multipleErrIds," +
             "       sc.single_err as singleErr,sc.multiple_succ as multipleSucc, sc.multiple_err as multipleErr,sc.multiple_score as multipleScore, " +
             "       e.exam_name as examName  from sys_user u,sys_student s,st_score sc,st_exam e  " +
             "where e.id = sc.exam_id " +
@@ -62,4 +65,44 @@ public interface ExamMapper extends BaseMapper<Exam> {
             "    and e.id = #{examId} " +
             "order by sc.score DESC</script>")
     List<UserVo> getStudentInfoByExamId(@Param("examId")String examId);
+
+    @Select("SELECT e.* " +
+            "FROM st_exam e " +
+            "WHERE e.`class_id` = #{classId} " +
+            "AND e.`exam_type` = #{examType} " +
+            "AND e.`exam_time` = #{examTime} " +
+            "AND e.question_type_ids != '4'" )
+    Exam getExamByExamTypeAndClassIdAndExamTime(@Param("examType")String examType, @Param("classId")String classId, @Param("examTime")Date examTime);
+
+    @Select("SELECT e.* " +
+            "FROM st_exam e " +
+            "WHERE e.`class_id` = #{classId} " +
+            "AND e.`exam_type` = #{examType} " +
+            "AND e.`exam_time` = #{examTime} " +
+            "AND e.question_type_ids = '4'" )
+    Exam getExamByUpperExamTypeAndClassIdAndExamTime(@Param("examType")String examType, @Param("classId")String classId, @Param("examTime")Date examTime);
+
+    @Select("SELECT e.* " +
+            "FROM st_exam e " +
+            "WHERE e.`class_id` = #{classId} " +
+            "AND e.`exam_type` = #{examType} " +
+            "AND e.`exam_time` BETWEEN #{start} AND #{end} " +
+            "AND e.question_type_ids != '4'" )
+    List<Exam> getWeekExamByExamTypeAndClassIdAndStartAndEnd(
+            @Param("examType")String examType,
+            @Param("classId")String classId,
+            @Param("start")Date start,
+            @Param("end")Date end);
+
+    @Select("SELECT e.* " +
+            "FROM st_exam e " +
+            "WHERE e.`class_id` = #{classId} " +
+            "AND e.`exam_type` = #{examType} " +
+            "AND e.`exam_time` BETWEEN #{start} AND #{end} " +
+            "AND e.question_type_ids = '4'" )
+    List<Exam> getWeekUpperExamByExamTypeAndClassIdAndStartAndEnd(
+            @Param("examType")String examType,
+            @Param("classId")String classId,
+            @Param("start")Date start,
+            @Param("end")Date end);
 }

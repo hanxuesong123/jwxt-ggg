@@ -28,7 +28,7 @@ public class ExamController extends BaseController {
     //保存试卷
     @RequestMapping(value = "/save",method = RequestMethod.POST,name = "API-EXAM-RELEASE")
     public Result save(@RequestBody Exam exam)throws CommonException {
-        return examService.save(exam,super.nickName);
+        return examService.save(exam,JwtUtils.getClaims(request).get("nickName").toString());
     }
 
     //开始考试
@@ -46,7 +46,7 @@ public class ExamController extends BaseController {
     //停止考试
     @RequestMapping(value = "/stopExam",method = RequestMethod.POST,name = "API-EXAM-STOP")
     public Result stopExam(@RequestBody Exam exam){
-        return examService.stopExam(exam,super.nickName);
+        return examService.stopExam(exam,JwtUtils.getClaims(request).get("nickName").toString());
     }
 
     @RequestMapping(value = "/readStudentAsks/{id}",method = RequestMethod.GET,name = "PROFILE")
@@ -60,7 +60,7 @@ public class ExamController extends BaseController {
     }
 
 
-    //问答评分
+    //问答/上机评分
     @RequestMapping(value = "/lastExam", method = RequestMethod.PUT,name = "PROFILE")
     public Result lastExam(@RequestBody Score score){
         return examService.lastExam(score);
