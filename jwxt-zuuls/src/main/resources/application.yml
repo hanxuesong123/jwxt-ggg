@@ -40,8 +40,22 @@ zuul:
       path: /student/**
       service-id: jwxt-learner
     ignored-services: '*'
-
-
+#  ratelimit: #3秒内访问不允许超过 2 次，并且这 2 次请求要小于 5 秒
+#    enabled: true  # 开启限流开关
+#    behind-proxy: true # 开启限流代理
+#    default-policy: #
+#      limit: 2 #单元时间内置允许访问2次
+#      quota: 5 #单元时间内每个请求不得超过5秒
+#      refresh-interval: 3 #单元时间 3秒
+#      type:
+#        - user
+#        - origin
+#        - url
+#    policies:
+#      jwxt-learner: #特定服务
+#        limit: 4 #单元时间内置允许访问4次
+#        quota: 5 #单元时间内每个请求不得超过5秒
+#        refresh-interval: 3 #单元时间 3秒
 
 # 配置断路器
 hystrix:
@@ -55,7 +69,7 @@ hystrix:
       execution:
         isolation:
           thread:   #熔断策略:线程
-            timeoutInMilliseconds: 5000  #设置请求超时时间（默认是一秒） 超时后会走后备方法
+            timeoutInMilliseconds: 60000  #设置请求超时时间（默认是一秒） 超时后会走后备方法
 
 
 
@@ -66,5 +80,6 @@ management:
       exposure:
         include: '*'
 
+# 降级服务
 down:
   service: jwxt-learner

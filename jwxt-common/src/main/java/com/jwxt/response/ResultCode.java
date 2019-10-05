@@ -23,7 +23,8 @@ public enum ResultCode {
   EXAM_IS_COMMIT(false,30101,"试卷已提交"),
   SCORE_IS_COMMIT(false,30102,"无法再次提交试卷"),
 
-  SERVICE_IS_DOWN(false,10110,"服务已降级");
+  SERVICE_IS_DOWN(false,10110,"服务已降级"),
+  SERVICE_IS_RATE_LIMIT(false,10111,"服务已限制");
 
 
   int code;

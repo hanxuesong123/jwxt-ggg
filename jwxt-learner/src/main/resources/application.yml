@@ -74,7 +74,7 @@ hystrix:
       execution:
         isolation:
           thread:   #熔断策略:线程
-            timeoutInMilliseconds: 5000  #设置请求超时时间（默认是一秒） 超时后会走后备方法
+            timeoutInMilliseconds: 60000  #设置请求超时时间（默认是一秒） 超时后会走后备方法
 
 
 
