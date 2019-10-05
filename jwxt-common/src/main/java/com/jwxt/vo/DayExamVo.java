@@ -18,65 +18,67 @@ public class DayExamVo implements Serializable {
 
     private String nickName;
 
-    private Integer col1;
+    private Integer total;
 
-    private Integer col2;
+    private Integer col1 = 0 ;
 
-    private Integer col3;
+    private Integer col2 = 0 ;
 
-    private Integer col4;
+    private Integer col3 = 0 ;
 
-    private Integer col5;
+    private Integer col4 = 0 ;
 
-    private Integer col6;
+    private Integer col5 = 0 ;
 
-    private Integer col7;
+    private Integer col6 = 0 ;
 
-    private Integer col8;
+    private Integer col7 = 0 ;
 
-    private Integer col9;
+    private Integer col8 = 0 ;
 
-    private Integer col10;
+    private Integer col9 = 0 ;
 
-    private Integer col11;
+    private Integer col10 = 0 ;
 
-    private Integer col12;
+    private Integer col11 = 0 ;
 
-    private Integer col13;
+    private Integer col12 = 0 ;
 
-    private Integer col14;
+    private Integer col13 = 0 ;
 
-    private Integer col15;
+    private Integer col14 = 0 ;
 
-    private Integer col16;
+    private Integer col15 = 0 ;
 
-    private Integer col17;
+    private Integer col16 = 0 ;
 
-    private Integer col18;
+    private Integer col17 = 0 ;
 
-    private Integer col19;
+    private Integer col18 = 0 ;
 
-    private Integer col20;
+    private Integer col19 = 0 ;
 
-    private Integer col21;
+    private Integer col20 = 0 ;
 
-    private Integer col22;
+    private Integer col21 = 0 ;
 
-    private Integer col23;
+    private Integer col22 = 0 ;
 
-    private Integer col24;
+    private Integer col23 = 0 ;
 
-    private Integer col25;
+    private Integer col24 = 0 ;
 
-    private Integer col26;
+    private Integer col25 = 0 ;
 
-    private Integer col27;
+    private Integer col26 = 0 ;
 
-    private Integer col28;
+    private Integer col27 = 0 ;
 
-    private Integer col29;
+    private Integer col28 = 0 ;
 
-    private Integer col30;
+    private Integer col29 = 0 ;
 
-    private Integer col31;
+    private Integer col30 = 0 ;
+
+    private Integer col31 = 0 ;
 }

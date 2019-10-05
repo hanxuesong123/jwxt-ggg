@@ -21,7 +21,9 @@ public enum ResultCode {
   EXAM_WEEK_IS_ALWAYS(false,30103,"当前选择的日期已有周测试卷"),
   EXAM_MONTH_IS_ALWAYS(false,30104,"当前选择的日期已有月考试卷"),
   EXAM_IS_COMMIT(false,30101,"试卷已提交"),
-  SCORE_IS_COMMIT(false,30102,"无法再次提交试卷");
+  SCORE_IS_COMMIT(false,30102,"无法再次提交试卷"),
+
+  SERVICE_IS_DOWN(false,10110,"服务已降级");
 
 
   int code;

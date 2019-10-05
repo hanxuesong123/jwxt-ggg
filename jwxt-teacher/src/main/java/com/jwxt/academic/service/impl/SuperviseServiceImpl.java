@@ -30,30 +30,6 @@ public class SuperviseServiceImpl implements SuperviseService {
     @Autowired
     private ClassesMapper classesMapper;
 
-
-    /*@Override
-    public Result getDayExamList(Map<String, Object> map) throws ParseException {
-
-        String date = map.get("date").toString();
-
-        Date beforeDate = DateUtils.getFirstDayDateOfMonth(new SimpleDateFormat("yyyy-MM-dd").parse(date));
-        Date lastDate = DateUtils.getLastDayOfMonth(new SimpleDateFormat("yyyy-MM-dd").parse(date));
-
-        String classesId = "1165965535742021634";
-
-        List<Student> students = classesMapper.getStudentList(classesId);
-
-        List<List<DayExam>> list = new ArrayList<>();
-
-        for (Student student : students) {
-            //一个学生一个DayExamVo
-            List<DayExam> dayExams = superviseMapper.getDayExamList(student.getId(),beforeDate,lastDate,map);
-            list.add(dayExams);
-        }
-
-        return new Result(ResultCode.SUCCESS,list);
-    }*/
-
     @Override
     public Result getDayExamList(Map<String, Object> map) throws ParseException {
 
@@ -110,6 +86,17 @@ public class SuperviseServiceImpl implements SuperviseService {
                     if( d == 30 ) day.setCol30(dayExam.getScore());
                     if( d == 31 ) day.setCol31(dayExam.getScore());
                 }
+
+                Integer total = day.getCol1() + day.getCol2() + day.getCol3()
+                        + day.getCol4() + day.getCol5() + day.getCol6() + day.getCol7() + day.getCol8()
+                        + day.getCol9() + day.getCol10() + day.getCol11() + day.getCol12() + day.getCol13()
+                        + day.getCol14() + day.getCol15() + day.getCol16() + day.getCol17() + day.getCol18()
+                        + day.getCol19() + day.getCol20() + day.getCol21() + day.getCol22() + day.getCol23()
+                        + day.getCol24() + day.getCol25() + day.getCol26() + day.getCol27() + day.getCol28()
+                        + day.getCol29() + day.getCol30() + day.getCol31();
+
+                day.setTotal(total);
+
                 list.add(day);
             }
 
