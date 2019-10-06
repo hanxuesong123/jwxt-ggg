@@ -4,7 +4,7 @@ package com.jwxt.response;
 
 public enum ResultCode {
 
-
+  ERPI_TOKEN(false,9999,"令牌过期，请重新登陆"),
   SUCCESS(true,10000,"恭喜你,操作成功"),
   FAIL(false,10001,"操作失败,请检查你的网络"),
   LOGIN_USER_NOT_ENABLE_STATE(false,80088,"登录用户不存在或密码错误或被禁用"),

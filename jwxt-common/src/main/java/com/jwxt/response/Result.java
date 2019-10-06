@@ -30,6 +30,12 @@ public class Result {
     this.data = data;
   }
 
+  public Result(boolean success,Integer code, String message){
+    this.success = success;
+    this.code = code;
+    this.message = message;
+  }
+
 
   public static Result SUCCESS(){
     return new Result(ResultCode.SUCCESS);

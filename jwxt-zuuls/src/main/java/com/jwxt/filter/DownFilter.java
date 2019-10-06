@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
-
+/**降级*/
 @Component
 public class DownFilter extends ZuulFilter {
 

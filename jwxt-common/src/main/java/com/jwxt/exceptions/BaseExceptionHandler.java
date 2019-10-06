@@ -3,6 +3,7 @@ package com.jwxt.exceptions;
 
 import com.jwxt.response.Result;
 import com.jwxt.response.ResultCode;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,6 +13,17 @@ import javax.servlet.http.HttpServletResponse;
 
 @ControllerAdvice //controller层的增强器: 捕获controller层抛出的异常
 public class BaseExceptionHandler {
+
+
+  @ExceptionHandler(value = ExpiredJwtException.class)
+  @ResponseBody
+  public Result err(HttpServletRequest request,HttpServletResponse response,Exception e){
+    Result result = null;
+    if(e.getClass() == ExpiredJwtException.class){
+      result = new Result(ResultCode.ERPI_TOKEN);
+    }
+    return result;
+  }
 
 
   @ExceptionHandler(value = Exception.class) //处理Exception异常

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+/**安全验证*/
 @Component
 public class MyZuulFilter extends ZuulFilter {
 
