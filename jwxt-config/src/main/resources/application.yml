@@ -23,10 +23,11 @@ spring:
       server:
         git:
           uri: https://github.com/hanxuesong123/jwxt-configuration.git
-          search-paths: config
+          #search-paths: config
           username: 1323232302@qq.com
           passphrase: hanzhibin1
-
+        native:
+          search-locations: classpath:/config
 
 eureka:
   client:
