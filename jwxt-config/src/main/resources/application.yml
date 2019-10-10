@@ -22,7 +22,7 @@ spring:
       label: master
       server:
         git:
-          uri: https://github.com/hanxuesong123/jwxt-ggg.git
+          uri: https://github.com/hanxuesong123/jwxt-configuration.git
           search-paths: config
           username: 1323232302@qq.com
           passphrase: hanzhibin1
