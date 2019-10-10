@@ -1,0 +1,30 @@
+server:
+  port: 56799
+
+spring:
+  application:
+    name: jwxt-eureka
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    #url: jdbc:mysql://localhost:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://192.168.5.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: root
+
+
+eureka:
+  instance:
+    #hostname: server1 #eureka的地址
+    prefer-ip-address: true #是否显示ip
+    instance-id: server01 #注册后的实例id
+  client:
+    fetch-registry: false #是否拉取服务表
+    register-with-eureka: false  # 是否把当前项目注册到eureka
+    service-url:
+      defaultZone: http://localhost:56798/eureka/,http://localhost:56799/eureka/
+      #defaultZone: http://192.168.5.210:56798/eureka/,http://192.168.5.210:56799/eureka/  #默认注册地址
+  server:
+    enable-self-preservation: false  #eureka的自我保护机制关闭(false为关闭,true开启)  (测试环境关闭, 生产环境开启 )
+
+    eviction-interval-timer-in-ms: 60000   #一分钟检测一次
