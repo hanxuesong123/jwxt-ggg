@@ -8,7 +8,7 @@ import com.jwxt.vo.QuestionVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "JWXT-TEACHER",fallbackFactory = UserClientFallbackFactory.class)//fallback = UserClientFallback.class)
+@FeignClient(name = "JWXT-TEACHER",fallbackFactory = UserClientFallbackFactory.class)//,fallback = UserClientFallback.class)//,fallbackFactory = UserClientFallbackFactory.class)
 public interface UserClient {
 
     @RequestMapping(value = "/user/findOne/{id}",method = RequestMethod.GET,name = "PROFILE")

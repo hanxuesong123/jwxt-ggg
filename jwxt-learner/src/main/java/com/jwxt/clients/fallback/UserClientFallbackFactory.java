@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserClientFallbackFactory.class);
+    Logger LOGGER = LoggerFactory.getLogger(UserClientFallbackFactory.class);
 
     @Override
     public UserClient create(Throwable e) {
 
-        LOGGER.warn("错误服务回调:{}",e.getMessage());
+        LOGGER.error("后备方法执行了,执行后备方法前的错误是:{}",e.getMessage());
 
-        return new UserClient() {
+        return  new UserClient() {
             @Override
             public Result findOne(String id) {
                 return null;
@@ -48,8 +48,7 @@ public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
 
             @Override
             public Result getQuestionExamTeacherList(Exam exam) {
-
-                return new Result(ResultCode.FAIL,"启动了回调工厂");
+                return new Result(ResultCode.FAIL,"启动了回调工厂的getQuestionExamTeacherList的后备方法");
             }
 
             @Override

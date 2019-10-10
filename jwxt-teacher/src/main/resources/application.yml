@@ -5,8 +5,8 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-    #url: jdbc:mysql://192.168.5.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    #url: jdbc:mysql://localhost:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://192.168.5.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: root
   servlet:
@@ -19,7 +19,7 @@ spring:
 
   redis:
     database: 0
-    host: 127.0.0.1
+    host: 192.168.5.210
     port: 6379
     jedis:
       pool:
@@ -28,6 +28,7 @@ spring:
         max-idle: 8
         min-idle: 0
     timeout: 50000
+    password: dmcn
 
 
 mybatis-plus:
@@ -45,7 +46,8 @@ ftp:
 eureka:
   client:
     service-url:
-      defaultZone : http://localhost:56798/eureka/,http://localhost:56799/eureka/  #我们要把该项目注册到哪个服务中心上
+      defaultZone : http://localhost:56798/eureka/,http://localhost:56799/eureka/
+      #defaultZone : http://192.168.5.210:56798/eureka/,http://192.168.5.210:56799/eureka/  #我们要把该项目注册到哪个服务中心上
   instance:
     prefer-ip-address: true
     instance-id: teacher #在注册中心显示的微服务的名称

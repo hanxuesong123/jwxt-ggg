@@ -15,6 +15,7 @@
         <module>jwxt-eureka02</module>
         <module>jwxt-zuuls</module>
         <module>jwxt-learner</module>
+        <module>jwxt-config</module>
     </modules>
 
 

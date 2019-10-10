@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-    #url: jdbc:mysql://192.168.5.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    #url: jdbc:mysql://localhost:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://192.168.5.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: root
   servlet:
@@ -14,6 +14,19 @@ spring:
       max-request-size: -1
   application:
     name: jwxt-learner #指定服务名
+  redis:
+    database: 0
+    host: 192.168.5.210
+    port: 6379
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 50000
+    password: dmcn
+
 
 mybatis-plus:
   configuration:
@@ -36,7 +49,8 @@ logging:
 eureka:
   client:
     service-url:
-      defaultZone : http://localhost:56798/eureka/,http://localhost:56799/eureka/  #我们要把该项目注册到哪个服务中心上
+      defaultZone : http://localhost:56798/eureka/,http://localhost:56799/eureka/
+      #defaultZone : http://192.168.5.210:56798/eureka/,http://192.168.5.210:56799/eureka/  #我们要把该项目注册到哪个服务中心上
   instance:
     prefer-ip-address: true
     instance-id: learner #在注册中心显示的微服务的名称
@@ -68,13 +82,13 @@ hystrix:
     default:
       circuitBreaker:
         enabled: true   #启动断路器
-        requestVolumeThreshold: 10  #请求数达到后才计算
+        requestVolumeThreshold: 1  #请求数达到后才计算
         sleepWindowInMilliseconds: 10000  #休眠时间
-        errorThresholdPercentage: 50    #错误率
+        errorThresholdPercentage: 1    #错误率
       execution:
         isolation:
           thread:   #熔断策略:线程
-            timeoutInMilliseconds: 60000  #设置请求超时时间（默认是一秒） 超时后会走后备方法
+            timeoutInMilliseconds: 70000  #设置请求超时时间（默认是一秒） 超时后会走后备方法
 
 
 
@@ -84,6 +98,8 @@ management:
     web:
       exposure:
         include: '*'
+
+
 swagger:
   authorization:
     key-name: token

@@ -5,7 +5,14 @@ import com.jwxt.entity.academic.Exam;
 import com.jwxt.exam.service.StudentExamService;
 import com.jwxt.exceptions.CommonException;
 import com.jwxt.response.Result;
+import com.jwxt.response.ResultCode;
 import com.jwxt.utils.JwtUtils;
+import com.jwxt.vo.ExamVo;
+import com.jwxt.vo.QuestionVo;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.netflix.hystrix.contrib.javanica.conf.HystrixPropertiesManager;
+import io.lettuce.core.dynamic.annotation.Command;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -14,11 +21,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/exam")
-@Api(value = "学生考试接口")
+@Api(tags = {"学生考试接口"})//(value = "学生考试接口")
 public class StudentExamController extends BaseController {
 
     @Autowired
@@ -39,9 +48,29 @@ public class StudentExamController extends BaseController {
 
     //获取考试试卷试题列表(用于学生讲解,带答案)
     @RequestMapping(value = "/getAnswerQuestionStudentList",method = RequestMethod.POST,name = "PROFILE")
+/*    @HystrixCommand(fallbackMethod = "getAnswerQuestionStudentListFallBack",commandProperties = {
+            @HystrixProperty(name = HystrixPropertiesManager.CIRCUIT_BREAKER_ENABLED,value = "true"), //开启熔断
+            @HystrixProperty(name = HystrixPropertiesManager.EXECUTION_ISOLATION_STRATEGY, value = "SEMAPHORE"), //隔离策略: 线程模式,信号量模式
+            @HystrixProperty(name = HystrixPropertiesManager.CIRCUIT_BREAKER_REQUEST_VOLUME_THRESHOLD,value="1"),//请求数量达到10个后才计算
+            @HystrixProperty(name = HystrixPropertiesManager.CIRCUIT_BREAKER_ERROR_THRESHOLD_PERCENTAGE,value = "1"),//错误率
+            @HystrixProperty(name = HystrixPropertiesManager.CIRCUIT_BREAKER_SLEEP_WINDOW_IN_MILLISECONDS, value = "1000")//当满足请求数量和  错误率后,会在这个时间内随机拿取一个请求查看是否成功,成功则正常运行,否则继续运行该后备方法
+    })*/
     public Result getAnswerQuestionStudentList(@RequestBody Exam exam){
         return studentExamService.getAnswerQuestionStudentList(exam);
     }
+
+/*    public Result getAnswerQuestionStudentListFallBack(Exam exam){
+        ExamVo vo = new ExamVo();
+        List<QuestionVo> singleList = new ArrayList<>();
+        List<QuestionVo> mutipleList = new ArrayList<>();
+        List<QuestionVo> askList = new ArrayList<>();
+        List<QuestionVo> upperList = new ArrayList<>();
+        vo.setAskList(askList);
+        vo.setMutipleList(mutipleList);
+        vo.setSingleList(singleList);
+        vo.setUpperList(upperList);
+        return new Result(ResultCode.FAIL,vo);
+    }*/
 
     //当学生点击开始考试按钮时,查看学生的试卷是否是2,如果是2,则不让再次进入考试
     @RequestMapping(value = "/getScoreStatus/{id}",method = RequestMethod.GET,name = "PROFILE")

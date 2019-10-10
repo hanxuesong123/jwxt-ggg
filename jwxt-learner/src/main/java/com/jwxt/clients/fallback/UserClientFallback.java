@@ -7,7 +7,8 @@ import com.jwxt.response.ResultCode;
 import com.jwxt.vo.QuestionVo;
 import org.springframework.stereotype.Component;
 
-@Component
+//后备方法类
+//@Component
 public class UserClientFallback implements UserClient {
 
     @Override
