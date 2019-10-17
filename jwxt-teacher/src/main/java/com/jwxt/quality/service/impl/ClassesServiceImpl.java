@@ -71,6 +71,7 @@ public class ClassesServiceImpl extends BaseService<Classes> implements ClassesS
             queryWrapper.between("end_time",DateUtils.beforeOneMonth(map.get("endTime").toString()),DateUtils.afterOneMonth(map.get("endTime").toString()));
         }
 
+        queryWrapper.orderByDesc("modify_time");
 
         IPage<Classes> result = classesMapper.selectPage(iPage, queryWrapper);
 

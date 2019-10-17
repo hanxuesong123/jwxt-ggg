@@ -4,6 +4,7 @@ import com.jwxt.academic.service.QuestionService;
 import com.jwxt.base.BaseController;
 import com.jwxt.exceptions.CommonException;
 import com.jwxt.response.Result;
+import com.jwxt.utils.JwtUtils;
 import com.jwxt.vo.QuestionVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class QuestionController extends BaseController {
 
     @RequestMapping(value = "/save",method = RequestMethod.POST,name = "API-QUESTION-ADD")
     public Result save(@RequestBody QuestionVo questionVo){
-        return questionService.save(questionVo,super.nickName);
+        return questionService.save(questionVo, JwtUtils.getClaims(request).get("nickName").toString());
     }
 
     @RequestMapping(value = "/update",method = RequestMethod.PUT,name = "API-QUESTION-UPDATE")

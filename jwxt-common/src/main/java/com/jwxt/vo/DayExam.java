@@ -19,4 +19,5 @@ public class DayExam implements Serializable {
     private Integer score;
 
     private Date executeTime;
+
 }

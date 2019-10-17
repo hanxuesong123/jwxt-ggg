@@ -1,12 +1,11 @@
 server:
   port: 8888
 
-
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-    #url: jdbc:mysql://192.168.5.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    #url: jdbc:mysql://localhost:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://192.168.18.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: root
   servlet:
@@ -19,9 +18,9 @@ spring:
 
   cloud:
     config:
-      label: master
-      server:
-        git:
+      label: master  #分支
+          server:
+            git:
           uri: https://github.com/hanxuesong123/jwxt-config
           username: 1323232302@qq.com
           password: hanzhibin1
@@ -29,8 +28,8 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone : http://localhost:56798/eureka/,http://localhost:56799/eureka/
-      #defaultZone : http://192.168.5.210:56798/eureka/,http://192.168.5.210:56799/eureka/  #我们要把该项目注册到哪个服务中心上
+      #defaultZone : http://localhost:56798/eureka/,http://localhost:56799/eureka/
+      defaultZone : http://192.168.18.210:56798/eureka/,http://192.168.18.210:56799/eureka/  #我们要把该项目注册到哪个服务中心上
   instance:
     prefer-ip-address: true
     instance-id: config #在注册中心显示的微服务的名称

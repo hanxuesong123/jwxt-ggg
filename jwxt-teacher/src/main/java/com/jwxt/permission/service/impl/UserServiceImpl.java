@@ -102,4 +102,20 @@ public class UserServiceImpl extends BaseService<User> implements UserService {
         User user = userMapper.selectById(id);
         return new Result(ResultCode.SUCCESS,user);
     }
+
+    @Override
+    public Result updatePassword(Map<String, Object> map, String id) {
+
+        User target = userMapper.selectById(id);
+
+        if(!target.getPassword().equals(map.get("oldPassword").toString())){
+            return Result.FAIL();
+        }
+
+        target.setPassword(map.get("newPassword").toString());
+
+        userMapper.updateById(target);
+
+        return Result.SUCCESS();
+    }
 }

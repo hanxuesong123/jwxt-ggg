@@ -4,11 +4,15 @@ package com.jwxt.response;
 
 public enum ResultCode {
 
+  PARAMETERS_IS_NULL(false,20001,"服务器内部错误,参数传递为空"),
+
+  ERROR_PASSWORD(false,9998,"密码不正确"),
   ERPI_TOKEN(false,9999,"令牌过期，请重新登陆"),
   SUCCESS(true,10000,"恭喜你,操作成功"),
   FAIL(false,10001,"操作失败,请检查你的网络"),
   LOGIN_USER_NOT_ENABLE_STATE(false,80088,"登录用户不存在或密码错误或被禁用"),
   NO_EXIST_PERMISSION(false,55555,"权限不足"),
+  SERVICE_DENIED(false,55556,"服务拒绝访问"),
   INTERCEPTOR_EXCEPTION(false,99999,"拦截异常"),
 
 

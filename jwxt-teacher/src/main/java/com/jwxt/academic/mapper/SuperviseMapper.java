@@ -24,8 +24,15 @@ public interface SuperviseMapper extends BaseMapper<Score> {
             "AND ss.`id` =u.`id` " +
             "AND s.`execute_time` BETWEEN #{beforeDate} AND #{lastDate} " +
             "AND e.`question_type_ids` != '4' " +
+            "AND e.exam_type = '1' " +
             "AND ss.`id` = #{studentId} " +
             "ORDER BY s.`execute_time` " +
             "</script>")
     List<DayExam> getDayExamList(@Param("studentId") String studentId,@Param("beforeDate") Date beforeDate,@Param("lastDate") Date lastDate,@Param("map") Map<String, Object> map);
+
+    @Select("SELECT count(0) " +
+            "FROM st_score " +
+            "WHERE student_id = #{studentId} " +
+            "AND execute_time BETWEEN #{beforeDate} AND #{lastDate} ")
+    Integer getCountByCurrentMonth(@Param("studentId") String studentId,@Param("beforeDate") Date beforeDate,@Param("lastDate") Date lastDate);
 }

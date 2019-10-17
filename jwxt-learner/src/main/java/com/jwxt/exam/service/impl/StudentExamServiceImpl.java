@@ -1,6 +1,7 @@
 package com.jwxt.exam.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jwxt.clients.UserClient;
 import com.jwxt.entity.academic.*;
@@ -11,6 +12,7 @@ import com.jwxt.exceptions.CommonException;
 import com.jwxt.response.PageResult;
 import com.jwxt.response.Result;
 import com.jwxt.response.ResultCode;
+import com.jwxt.utils.JSONUtils;
 import com.jwxt.utils.MyRedisTemplate;
 import com.jwxt.utils.SftpUtil;
 import com.jwxt.vo.ExamStudentVo;
@@ -166,21 +168,27 @@ public class StudentExamServiceImpl implements StudentExamService {
 
     @Override
     public Result getScoreStatus(String userId, String examId) throws CommonException {
+
+        if(userId == null) return Result.FAIL();
+        if(examId == null) return Result.FAIL();
+
+        //TODO: 空指针
         QueryWrapper<Score> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("student_id",userId);
         queryWrapper.eq("exam_id",examId);
 
         Score score = scoreMapper.selectOne(queryWrapper);
 
-        String status = score.getStatus();
+        if(score != null && score.getStatus() != null){
+            String status = score.getStatus();
 
-        if("0".equals(status)){
-            score.setStatus("1");
-            scoreMapper.updateById(score);
+            if("0".equals(status)){
+                score.setStatus("1");
+                scoreMapper.updateById(score);
+            }
+
+            if("2".equals(status)) throw new CommonException(ResultCode.EXAM_IS_COMMIT);
         }
-
-
-        if("2".equals(status)) throw new CommonException(ResultCode.EXAM_IS_COMMIT);
 
         return Result.SUCCESS();
     }
@@ -209,7 +217,6 @@ public class StudentExamServiceImpl implements StudentExamService {
 
         if("1".equals(score.getStatus())){  //屏蔽为0的学生
             score.setStatus("2");
-            score.setExecuteTime(new Date());
         }
 
 
@@ -233,6 +240,8 @@ public class StudentExamServiceImpl implements StudentExamService {
             Integer scoreSingle = exam.getSingleScore(); //单选题每题分数
 
             Single single = null;
+
+
 
             for(int i = 0 ;i < singleIdArray.length ; i ++){
 
@@ -295,7 +304,6 @@ public class StudentExamServiceImpl implements StudentExamService {
             Mutiple mutiple = null;
 
             for (int i = 0; i < mutipleIdArray.length; i++) {
-
                 if(myRedisTemplate.hasHashKey("mutiple",mutipleIdArray[i])){
                     Object object = myRedisTemplate.hGetObject("mutiple", mutipleIdArray[i], Mutiple.class);
                     if(object == null){
@@ -363,14 +371,22 @@ public class StudentExamServiceImpl implements StudentExamService {
 
         score.setScore(totalScore);
 
+        score.setExecuteTime(exam.getExamTime());
+
         scoreMapper.updateById(score);
 
-
-        //TODO: 删除redis中的临时数据
         redisTemplate.opsForHash().delete(exam.getId(),map.get("userId").toString());
 
         return Result.SUCCESS();
     }
+
+/*    public static void main(String[] args) {
+        String str = "{\"id\":\"1184655534469525506\",\"modifyName\":\"\",\"modifyTime\":1571278864000,\"mutipleAsk\":\"1,2\",\"mutipleContent\":\"CAD和深V接口发多少\",\"mutipleOptionA\":\"艾弗森案发\",\"mutipleOptionB\":\"阿发我阿飞\",\"mutipleOptionC\":\"啊发发发阿飞阿萨斯首发\",\"mutipleOptionD\":\"艾弗森沙发沙发上\",\"mutipleStatus\":\"1\"}";
+        JSONObject jsonObject = JSON.parseObject(str);
+        Mutiple mutiple = JSONUtils.ObjectToJavaBean(jsonObject, Mutiple.class);
+        System.out.println(mutiple.toString());
+    }*/
+
 
     @Override
     public Result saveTempAnswer(Map<String, Object> map) {
@@ -415,6 +431,7 @@ public class StudentExamServiceImpl implements StudentExamService {
                 queryWrapper.eq("single_id",singleId);
                 queryWrapper.eq("exam_id",exam.getId());
                 queryWrapper.eq("student_id",userId);
+                //TODO: 数据库有多条数据, 现在这里是异常
                 SingleResult singleResult = singleResultMapper.selectOne(queryWrapper);
                 list.add(singleResult);
             }
@@ -501,11 +518,10 @@ public class StudentExamServiceImpl implements StudentExamService {
 
         newFileName = newFileName.replace("-", "");
 
-        //SftpUtil sftpUtil = new SftpUtil(FTP_HOST, Integer.parseInt(FTP_PORT), FTP_USERNAME, FTP_PASSWORD);
-
+        SftpUtil sftpUtil = new SftpUtil(FTP_HOST, Integer.parseInt(FTP_PORT), FTP_USERNAME, FTP_PASSWORD);
 
         //TODO:联网后打开
-        //sftpUtil.upload("/var/ftp/pub", newFileName, inputStream);
+        sftpUtil.upload("/var/ftp/pub", newFileName, inputStream);
 
         String url = "ftp://".concat(FTP_HOST).concat(":21/pub/").concat(newFileName);
 

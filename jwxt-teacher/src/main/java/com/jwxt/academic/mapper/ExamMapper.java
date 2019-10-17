@@ -53,12 +53,13 @@ public interface ExamMapper extends BaseMapper<Exam> {
     List<Student> getStudentByExamId(@Param("examId")String examId);
 
     @Select("<script>select  " +
-            "       u.nick_name as nickName,  " +
+            "       u.nick_name as nickName,s.id as studentId,  " +
             "       sc.status,sc.score,sc.single_succ as singleSucc, " +
             "       sc.single_score as singleScore, sc.single_succ_ids as singleSuccIds,sc.single_err_ids as singleErrIds, " +
             "       sc.multiple_succ_ids as multipleSuccIds, sc.multiple_err_ids as multipleErrIds," +
             "       sc.single_err as singleErr,sc.multiple_succ as multipleSucc, sc.multiple_err as multipleErr,sc.multiple_score as multipleScore, " +
-            "       e.exam_name as examName  from sys_user u,sys_student s,st_score sc,st_exam e  " +
+            "       e.exam_name as examName  " +
+            "from sys_user u,sys_student s,st_score sc,st_exam e  " +
             "where e.id = sc.exam_id " +
             "    and sc.student_id = s.id " +
             "    and s.id = u.id " +

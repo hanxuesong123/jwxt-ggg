@@ -14,6 +14,7 @@ import java.io.Serializable;
 @ToString
 public class UserVo implements Serializable {
 
+    private String studentId;
 
     @TableField("exam_name")
     private String examName;

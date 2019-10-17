@@ -5,8 +5,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://localhost:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-    url: jdbc:mysql://192.168.5.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://192.168.18.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: root
   servlet:
@@ -19,7 +18,7 @@ spring:
 
   redis:
     database: 0
-    host: 192.168.5.210
+    host: 192.168.18.210
     port: 6379
     jedis:
       pool:
@@ -38,7 +37,7 @@ mybatis-plus:
   mapper-locations: classpath:com/jwxt/*/mapper/*.xml
 
 ftp:
-  host: 192.168.5.210
+  host: 192.168.18.210
   port: 22
   username: root
   password: dmcn@123
@@ -46,23 +45,17 @@ ftp:
 eureka:
   client:
     service-url:
-      defaultZone : http://localhost:56798/eureka/,http://localhost:56799/eureka/
-      #defaultZone : http://192.168.5.210:56798/eureka/,http://192.168.5.210:56799/eureka/  #我们要把该项目注册到哪个服务中心上
+      defaultZone : http://192.168.18.210:56798/eureka/,http://192.168.18.210:56799/eureka/
   instance:
     prefer-ip-address: true
     instance-id: teacher #在注册中心显示的微服务的名称
 
-#feign的配置，连接超时及读取超时配置
-#feign:
-#  client:
-#    config:
-#      default:
-#        connectTimeout: 5000
-#        readTimeout: 5000
-#        loggerLevel: basic
 
-#ribbon:
-#  ReadTimeout: 60000
-#  ConnectTimeout: 60000
-#  eureka:
-#    enabled: true
+#spring:
+#  cloud:
+#    config:
+#      uri: http://localhost:8888
+#      #uri: http://192.168.18.210:8888
+#      label: master
+#      name: application-teacher
+#      profile: dev   # 指定环境

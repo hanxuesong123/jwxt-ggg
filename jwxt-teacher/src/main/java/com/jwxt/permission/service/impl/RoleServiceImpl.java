@@ -1,5 +1,6 @@
 package com.jwxt.permission.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jwxt.entity.permission.Role;
@@ -35,6 +36,11 @@ public class RoleServiceImpl implements RoleService {
         Integer page = Integer.parseInt(map.get("page").toString());
         Integer size = Integer.parseInt(map.get("size").toString());
         IPage<Role> iPage = new Page<>(page,size);
+
+        QueryWrapper<Role> queryWrapper = new QueryWrapper<>();
+
+        queryWrapper.orderByDesc("id");
+
         IPage<Role> result = roleMapper.selectPage(iPage, null);
         PageResult<Role> pageResult = new PageResult<>(result.getTotal(),result.getRecords());
         return new Result(ResultCode.SUCCESS,pageResult);

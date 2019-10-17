@@ -5,14 +5,13 @@ spring:
     name: my-zuul
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    #url: jdbc:mysql://localhost:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
-    url: jdbc:mysql://192.168.5.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://192.168.18.240:3306/kytms?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
     password: root
 
   redis:
     database: 0
-    host: 192.168.5.210
+    host: 192.168.18.210
     port: 6379
     jedis:
       pool:
@@ -23,18 +22,13 @@ spring:
     timeout: 50000
     password: dmcn
 
-
-
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:56798/eureka/,http://localhost:56799/eureka/
-      #defaultZone: http://192.168.5.210:56798/eureka/,http://192.168.5.210:56799/eureka/
+      defaultZone: http://192.168.18.210:56798/eureka/,http://192.168.18.210:56799/eureka/
   instance:
     prefer-ip-address: true
     instance-id: my_zuul8088
-
-
 
 
 ribbon:
@@ -42,6 +36,7 @@ ribbon:
   ConnectTimeout: 60000
   eureka:
     enabled: true
+
 
 zuul:
   routes:
@@ -52,17 +47,17 @@ zuul:
       path: /student/**
       service-id: jwxt-learner
     ignored-services: '*'
-  ratelimit: # 全局限流
-    enabled: true #开启限流
-    behind-proxy: true #通过代理来执行限流
-    default-policy: #设置限流规则
-      limit: 2 #在单元时间内允许访问2次
-      quota: 5 #在单元时间内所有请求加起来不得超过5秒
-      refresh-interval: 1 #单元时间 1秒之后重新计数
-      type:
-        - user
-        - origin
-        - url
+#  ratelimit: # 全局限流
+#    enabled: true #开启限流
+#    behind-proxy: true #通过代理来执行限流
+#    default-policy: #设置限流规则
+#      limit: 150 #在单元时间内允许访问2次
+#      quota: 60 #在单元时间内所有请求加起来不得超过5秒
+#      refresh-interval: 1 #单元时间 1秒之后重新计数
+#      type:
+#        - user
+#        - origin
+#        - url
 
 # 配置断路器
 hystrix:
@@ -86,3 +81,13 @@ management:
     web:
       exposure:
         include: '*'
+
+#spring:
+#  cloud:
+#    config:
+#      #uri: http://192.168.18.210:8888
+#      uri: http://localhost:8888
+#      label: master
+#      name: application-zuul
+#      profile: dev   # 指定环境
+

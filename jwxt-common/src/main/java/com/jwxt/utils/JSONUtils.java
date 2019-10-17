@@ -28,7 +28,12 @@ public class JSONUtils {
      * @return 传入的泛型对象
      */
     public static<T>  T ObjectToJavaBean(Object o,Class<T> clazz){
-        String string = JSON.toJSONString(o);
+
+        //改错: JSON解析异常
+        String str = (String) o;
+        JSONObject jsonObject = JSON.parseObject(str);
+        //....end
+        String string = JSON.toJSONString(jsonObject);
         T t = JSON.parseObject(string, clazz);
         return t;
     }

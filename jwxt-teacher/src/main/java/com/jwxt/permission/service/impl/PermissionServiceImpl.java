@@ -45,6 +45,7 @@ public class PermissionServiceImpl implements PermissionService {
         queryWrapper.eq("pid", "0");
         queryWrapper.eq("type", "1");
 
+        queryWrapper.orderByDesc("type");
 
         IPage<Permission> result = permissionMapper.selectPage(iPage, queryWrapper);
 

@@ -5,6 +5,7 @@ import com.jwxt.entity.academic.Score;
 import com.jwxt.exceptions.CommonException;
 import com.jwxt.response.Result;
 
+import java.text.ParseException;
 import java.util.Map;
 
 public interface ExamService {
@@ -32,5 +33,5 @@ public interface ExamService {
 
     Result getQuestionExamList(Exam exam);
 
-
+    Result findSingleStudentScores(Map<String, Object> map) throws ParseException;
 }

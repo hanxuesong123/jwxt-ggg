@@ -45,15 +45,22 @@ public class SuperviseServiceImpl implements SuperviseService {
         List<DayExamVo> list = new ArrayList<>();
 
         for (Student student : students) {
-            //一个学生一个DayExamVo
+            //一个学生一个DayExamVo    DayExamVo获得当前学生当前月份的所有成绩
             List<DayExam> dayExams = superviseMapper.getDayExamList(student.getId(),beforeDate,lastDate,map);
 
             if(dayExams != null && dayExams.size() > 0){
                 DayExamVo day = new DayExamVo();
                 day.setClassName(dayExams.get(0).getClassName());
                 day.setNickName(dayExams.get(0).getNickName());
-                for (DayExam dayExam : dayExams) {
-                    int d = dayExam.getExecuteTime().getDay() - 1;
+
+                Integer count = superviseMapper.getCountByCurrentMonth(student.getId(),beforeDate,lastDate);
+
+                day.setCount(count);
+
+                Integer newCount = count == 0 ? 1 : count;
+
+                for (DayExam dayExam : dayExams) {  //dayExam是单个学生的每天成绩
+                    int d = DateUtils.getDay(dayExam.getExecuteTime());
                     if( d == 1 ) day.setCol1(dayExam.getScore());
                     if( d == 2 ) day.setCol2(dayExam.getScore());
                     if( d == 3 ) day.setCol3(dayExam.getScore());
@@ -94,6 +101,9 @@ public class SuperviseServiceImpl implements SuperviseService {
                         + day.getCol19() + day.getCol20() + day.getCol21() + day.getCol22() + day.getCol23()
                         + day.getCol24() + day.getCol25() + day.getCol26() + day.getCol27() + day.getCol28()
                         + day.getCol29() + day.getCol30() + day.getCol31();
+
+
+                day.setSvg(total / newCount);
 
                 day.setTotal(total);
 

@@ -47,7 +47,7 @@ public class LoginServiceImpl implements LoginService {
 
         User target = userMapper.findUsernameAndPassword(user.getUsername(), user.getPassword());
 
-        if (target == null) throw new CommonException(ResultCode.LOGIN_USER_NOT_ENABLE_STATE);
+        if (target == null) return new Result(ResultCode.LOGIN_USER_NOT_ENABLE_STATE);
 
         List<Permission> permissions = permissionMapper.getPermissionListByUserId(target.getId());
 
@@ -104,6 +104,15 @@ public class LoginServiceImpl implements LoginService {
         }else{
             throw new CommonException(ResultCode.FAIL);
         }
+    }
+
+    @Override
+    public Result logout(HttpServletRequest request) {
+        String userId = JwtUtils.getClaims(request).getId();
+        if(redisTemplate.hasKey(userId)){
+            redisTemplate.delete(userId);
+        }
+        return Result.SUCCESS();
     }
 }
 

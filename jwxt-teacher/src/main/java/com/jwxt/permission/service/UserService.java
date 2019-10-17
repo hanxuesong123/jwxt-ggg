@@ -14,4 +14,6 @@ public interface UserService {
     Result saveTeacher(TeacherVo teacherVo,String nickName);
 
     Result findOne(String id);
+
+    Result updatePassword(Map<String, Object> map, String id);
 }

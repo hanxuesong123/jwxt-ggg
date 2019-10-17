@@ -8,8 +8,11 @@ import com.jwxt.exceptions.CommonException;
 import com.jwxt.response.Result;
 import com.jwxt.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.Map;
 
 @RestController
@@ -82,6 +85,12 @@ public class ExamController extends BaseController {
     @RequestMapping(value = "/getQuestionExamTeacherList",method = RequestMethod.POST,name = "API-EXAM-EXPLAIN")
     public Result getQuestionExamTeacherList(@RequestBody Exam exam){
         return examService.getQuestionExamList(exam);
+    }
+
+    // 查看单个学生的所有成绩
+    @RequestMapping(value = "/findSingleStudentScores",method = RequestMethod.POST,name = "PROFILE")
+    public Result findSingleStudentScores(@RequestBody Map<String,Object> map) throws ParseException {
+        return examService.findSingleStudentScores(map);
     }
 
 }

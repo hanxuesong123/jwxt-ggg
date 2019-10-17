@@ -12,4 +12,6 @@ public interface LoginService {
     Result login(User user, HttpServletRequest request, HttpServletResponse response) throws CommonException;
 
     Result profile(HttpServletRequest request) throws CommonException;
+
+    Result logout(HttpServletRequest request);
 }

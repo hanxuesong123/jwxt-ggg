@@ -20,14 +20,17 @@ import com.jwxt.utils.DateUtils;
 import com.jwxt.utils.MyRedisTemplate;
 import com.jwxt.vo.*;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Slf4j
 @Service
 @Transactional
 @SuppressWarnings("all")
@@ -84,6 +87,7 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
         }else if (map.get("questionType") != null && map.get("questionType").toString().equals("2")){
             queryWrapper.eq("question_type_ids","4");
         }
+        queryWrapper.orderByDesc("exam_time");
         IPage<Exam> result = examMapper.selectPage(iPage, queryWrapper);
         PageResult<Exam> pageResult = new PageResult<>(result.getTotal(),result.getRecords());
         return new Result(ResultCode.SUCCESS,pageResult);
@@ -228,7 +232,7 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
         }else{
             for (Student student : students) {  //为每一个学生初始化试卷成绩
                 Score score = Score.builder()
-                        .executeTime(new Date())
+                        .executeTime(exam.getExamTime())
                         .studentId(student.getId())
                         .score(0)
                         .examId(exam.getId())
@@ -477,6 +481,28 @@ public class ExamServiceImpl extends BaseService<Exam> implements ExamService {
         examVo.setSingleList(singleList);
         examVo.setUpperList(upperList);
         return new Result(ResultCode.SUCCESS,examVo);
+    }
+
+    @Override
+    public Result findSingleStudentScores(Map<String, Object> map) throws ParseException {
+
+        Object date = map.get("date");
+        Object examType = map.get("examType");
+        String studentId = map.get("studentId").toString();
+        if(examType == null) return Result.PARAMETERS_IS_NULL();
+        if(date == null) return Result.PARAMETERS_IS_NULL();
+        if(studentId == null) return Result.PARAMETERS_IS_NULL();
+
+        String[] dateArray = date.toString().split(",");
+
+        log.debug("start:{},end:{}",dateArray[0],dateArray[1]);
+
+        Date startDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateArray[0]);
+        Date endDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateArray[1]);
+
+        List<Score> scores =  scoreMapper.findSingleStudentScores(studentId,startDate,endDate,examType.toString());
+
+        return new Result(ResultCode.SUCCESS,scores);
     }
 
 }

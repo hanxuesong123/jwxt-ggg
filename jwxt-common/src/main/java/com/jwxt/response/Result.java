@@ -45,4 +45,8 @@ public class Result {
     return new Result(ResultCode.FAIL);
   }
 
+  public static Result PARAMETERS_IS_NULL(){
+    return new Result(ResultCode.PARAMETERS_IS_NULL);
+  }
+
 }

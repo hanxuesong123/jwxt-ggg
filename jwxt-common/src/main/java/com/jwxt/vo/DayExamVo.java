@@ -20,6 +20,11 @@ public class DayExamVo implements Serializable {
 
     private Integer total;
 
+    private Integer count; //学生当前月考试次数
+
+    private Integer svg; //平均分
+
+
     private Integer col1 = 0 ;
 
     private Integer col2 = 0 ;

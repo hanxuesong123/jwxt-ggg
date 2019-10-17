@@ -59,6 +59,7 @@ public class GeneralServiceImpl extends BaseService<General> implements GeneralS
             queryWrapper.eq("status",map.get("status").toString());
         }
 
+        queryWrapper.orderByDesc("modify_time");
 
         IPage<General> result = generalMapper.selectPage(iPage, queryWrapper);
 

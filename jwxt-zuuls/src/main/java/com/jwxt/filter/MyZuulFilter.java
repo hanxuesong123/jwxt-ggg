@@ -86,7 +86,7 @@ public class MyZuulFilter extends ZuulFilter {
         //设置响应代码
         requestContext.setResponseStatusCode(200);
         //构建响应的信息
-        Result responseResult = new Result(ResultCode.NO_EXIST_PERMISSION);
+        Result responseResult = new Result(ResultCode.SERVICE_DENIED);
         //转成json
         String jsonString = JSON.toJSONString(responseResult);
         requestContext.setResponseBody(jsonString);
