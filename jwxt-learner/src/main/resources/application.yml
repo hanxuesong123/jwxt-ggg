@@ -34,11 +34,14 @@ mybatis-plus:
   mapper-locations: classpath:com/jwxt/*/mapper/*.xml
 
 
+
+
 ftp:
   host: 192.168.18.210
-  port: 22
-  username: root
-  password: dmcn@123
+  port: 20
+  username: ftp
+  password: ftp
+
 
 logging:
   level:

@@ -74,6 +74,13 @@ public class MyRedisTemplate {
         }
     }
 
+    public Object hGetObject(String key,String field){
+        Object o = redisTemplate.opsForHash().get(key, field);
+        return o;
+    }
+
+
+
 
 
 
