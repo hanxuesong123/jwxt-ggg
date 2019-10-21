@@ -6,15 +6,19 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jwxt.base.BaseService;
 import com.jwxt.entity.academic.ErrorQuestion;
+import com.jwxt.entity.academic.Exam;
 import com.jwxt.entity.academic.Single;
 import com.jwxt.entity.other.General;
+import com.jwxt.entity.quality.Classes;
 import com.jwxt.exam.mapper.*;
 import com.jwxt.exam.service.StudentExerciseService;
+import com.jwxt.response.PageResult;
 import com.jwxt.response.Result;
 import com.jwxt.response.ResultCode;
 import com.jwxt.utils.MyRedisTemplate;
 import com.jwxt.utils.SerializeUtil;
 import com.jwxt.vo.ChapterVo;
+import com.jwxt.vo.ErrorQuestionVo;
 import com.jwxt.vo.GeneralCardVo;
 import com.jwxt.vo.QuestionVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.*;
 
 @Service
@@ -41,6 +47,11 @@ public class StudentExerciseServiceImpl extends BaseService implements StudentEx
     @Autowired
     private ErrorQuestionMapper errorQuestionMapper;
 
+    @Autowired
+    private ClassesMapper classesMapper;
+
+    @Autowired
+    private ExamMapper examMapper;
 
     @Override
     public Result getStages() {
@@ -185,6 +196,89 @@ public class StudentExerciseServiceImpl extends BaseService implements StudentEx
             errorQuestionMapper.insert(errorQuestion);
         }
 
+        return Result.SUCCESS();
+    }
+
+    @Override
+    public Result queryStudentExamStatus(String studentId) {
+        Classes classes = classesMapper.getClassesByStudentId(studentId);
+        if(classes == null) return Result.FAIL();
+        String classesId = classes.getId();
+
+        QueryWrapper<Exam> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("class_id",classesId);
+
+        List<Exam> exams = examMapper.selectList(queryWrapper);
+
+        int count = 0;
+
+        if(exams == null) return Result.SUCCESS();
+
+        if (exams.size() == 0) return Result.SUCCESS();
+
+        for (Exam exam : exams) {
+            if(!"4".equals(exam.getExamStatus())){
+                count ++;
+            }else{
+                continue;
+            }
+        }
+
+        if(count == 0){
+            return Result.SUCCESS();
+        }else{
+            return new Result(ResultCode.EXAM_IS_STARTING);
+        }
+
+    }
+
+    @Override
+    public Result getStudentErrorQuestionList(Map<String, Object> map) {
+
+        Object type = map.get("type");
+
+        type = type == null ? "1" : type.toString();
+
+        Object page = map.get("page");
+        Object size = map.get("size");
+
+        if(page == null) return Result.PARAMETERS_IS_NULL();
+        if(size == null) return Result.PARAMETERS_IS_NULL();
+
+        Integer newPage = (Integer.parseInt(page.toString() ) - 1 ) * Integer.parseInt(size.toString());
+
+        map.put("page",newPage);
+
+        List<ErrorQuestionVo> errorList = null;
+        int total = 0;
+
+        switch (type.toString()){
+            case "1":
+                total = errorQuestionMapper.getSingleErrorsCount(map);
+                errorList = errorQuestionMapper.getSingleErrorList(map);
+                break;
+            case "2":
+                total = errorQuestionMapper.getMutipleErrorsCount(map);
+                errorList = errorQuestionMapper.getMutipleErrorList(map);
+                break;
+            case "3":
+                total = errorQuestionMapper.getAskErrorsCount(map);
+                errorList = errorQuestionMapper.getAskErrorList(map);
+                break;
+            case "4":
+                total = errorQuestionMapper.getUpperErrorsCount(map);
+                errorList = errorQuestionMapper.getUpperErrorList(map);
+                break;
+        }
+
+        PageResult<ErrorQuestionVo> pageResult = new PageResult<>(total,errorList);
+
+        return new Result(ResultCode.SUCCESS,pageResult);
+    }
+
+    @Override
+    public Result removeErrorQuestion(String id, String studentId) {
+        errorQuestionMapper.removeErrorQuestion(id,studentId);
         return Result.SUCCESS();
     }
 

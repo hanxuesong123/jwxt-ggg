@@ -40,4 +40,7 @@ public class ErrorQuestion implements Serializable {
 
     @TableField("modify_name")
     private String modifyName;
+
+    @TableField("student_answer")
+    private String studentAnswer;
 }

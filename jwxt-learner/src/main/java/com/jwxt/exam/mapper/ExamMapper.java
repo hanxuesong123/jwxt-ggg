@@ -42,4 +42,6 @@ public interface ExamMapper extends BaseMapper<Exam> {
             " </script>")
     List<Exam> getExamListByStudentId(@Param("page")Integer page, @Param("size")Integer size, @Param("map")Map<String,Object>map);
 
+
+   /* List<Exam> getExamListByClassesId(@Param("classesId")String classesId);*/
 }

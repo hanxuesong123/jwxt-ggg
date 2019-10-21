@@ -20,7 +20,7 @@ public class JwtUtils {
   //签名私钥
   private static String key = "educational";
   //签名的失效时间
-  private static Long ttl = 60 * 60 * 1000L;
+  private static Long ttl = 60 * 60 * 24 * 1000L;
 
   /**
    * 设置认证token

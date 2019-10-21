@@ -47,6 +47,10 @@ zuul:
       path: /student/**
       service-id: jwxt-learner
     ignored-services: '*'
+#  sensitiveHeaders:
+#    host:
+#      socket-timeout-millis: 60000
+#      connect-timeout-millis: 60000
 #  ratelimit: # 全局限流
 #    enabled: true #开启限流
 #    behind-proxy: true #通过代理来执行限流

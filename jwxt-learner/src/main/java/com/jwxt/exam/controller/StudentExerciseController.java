@@ -41,4 +41,22 @@ public class StudentExerciseController extends BaseController {
     public Result saveErrorQuestion(@RequestBody ErrorQuestion errorQuestion){
         return studentExerciseService.saveErrorQuestion(errorQuestion,JwtUtils.getClaims(request).getId(),JwtUtils.getClaims(request).get("nickName").toString());
     }
+
+    @RequestMapping(value = "/queryStudentExamStatus",method = RequestMethod.GET,name = "PROFILE")
+    public Result queryStudentExamStatus(){
+        return studentExerciseService.queryStudentExamStatus(JwtUtils.getClaims(request).getId());
+    }
+
+    @RequestMapping(value = "/getStudentErrorQuestionList",method = RequestMethod.POST,name = "PROFILE")
+    public Result getStudentErrorQuestionList(@RequestBody Map<String,Object> map){
+        map.put("studentId",JwtUtils.getClaims(request).getId());
+        return studentExerciseService.getStudentErrorQuestionList(map);
+    }
+
+
+    @RequestMapping(value = "/removeErrorQuestion/{id}",method = RequestMethod.DELETE,name = "PROFILE")
+    public Result removeErrorQuestion(@PathVariable("id")String id){
+        return studentExerciseService.removeErrorQuestion(id,JwtUtils.getClaims(request).getId());
+    }
+
 }

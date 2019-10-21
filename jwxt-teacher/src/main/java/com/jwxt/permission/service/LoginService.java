@@ -9,9 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface LoginService {
 
-    Result login(User user, HttpServletRequest request, HttpServletResponse response) throws CommonException;
+    Result login(User user, HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-    Result profile(HttpServletRequest request) throws CommonException;
+    Result profile(HttpServletRequest request) throws Exception;
 
-    Result logout(HttpServletRequest request);
+    Result logout(HttpServletRequest request) throws Exception;
 }

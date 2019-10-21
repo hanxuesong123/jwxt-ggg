@@ -13,6 +13,9 @@ public enum ResultCode {
   LOGIN_USER_NOT_ENABLE_STATE(false,80088,"登录用户不存在或密码错误或被禁用"),
   NO_EXIST_PERMISSION(false,55555,"权限不足"),
   SERVICE_DENIED(false,55556,"服务拒绝访问"),
+  EXAM_IS_STARTING(false,56789,"有未结束的考试"),
+
+
   INTERCEPTOR_EXCEPTION(false,99999,"拦截异常"),
 
 

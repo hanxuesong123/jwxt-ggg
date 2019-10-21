@@ -15,4 +15,10 @@ public interface StudentExerciseService {
     Result saveQuestionToCache(Map<String, Object> map,String studentId);
 
     Result saveErrorQuestion(ErrorQuestion errorQuestion,String studentId,String nickName);
+
+    Result queryStudentExamStatus(String studentId);
+
+    Result getStudentErrorQuestionList(Map<String, Object> map);
+
+    Result removeErrorQuestion(String id, String studentId);
 }

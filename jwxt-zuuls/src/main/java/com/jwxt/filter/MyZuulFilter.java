@@ -13,10 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 /**安全验证*/
 @Component
 public class MyZuulFilter extends ZuulFilter {
@@ -75,6 +80,43 @@ public class MyZuulFilter extends ZuulFilter {
             return null;
         }
     }
+
+
+//    @Override
+//    public Object run() throws ZuulException {
+//
+//        RequestContext currentContext = RequestContext.getCurrentContext();
+//        HttpServletRequest request = currentContext.getRequest();
+//        HttpServletResponse response = currentContext.getResponse();
+//
+//        StringBuffer requestURL = request.getRequestURL();
+//
+//        if (requestURL.toString().contains("teacher/login")) return null;
+//        if (requestURL.toString().contains("actuator/routes")) return null;
+//        if (requestURL.toString().contains("actuator/filters")) return null;
+//
+//        String authorization = request.getHeader("token");
+//        //String authorization = request.getParameter("token");
+//        if (!StringUtils.isEmpty(authorization) && authorization.startsWith("Bearer")) {
+//            Claims claims = JwtUtils.getClaims(request);
+//
+//            if (claims == null) {
+//                access_denied();
+//                return null;
+//            }
+//
+//            if(redisTemplate.opsForValue().get(claims.getId()) == null){
+//                access_denied();
+//                return null;
+//            }
+//
+//            return null;
+//
+//        } else {
+//            access_denied();
+//            return null;
+//        }
+//    }
 
     //拒绝访问
     protected void access_denied(){
