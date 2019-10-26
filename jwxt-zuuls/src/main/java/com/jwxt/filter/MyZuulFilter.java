@@ -55,6 +55,9 @@ public class MyZuulFilter extends ZuulFilter {
         StringBuffer requestURL = request.getRequestURL();
 
         if (requestURL.toString().contains("teacher/login")) return null;
+        if (requestURL.toString().contains("teacher/user/checkTelephone")) return null;
+        if (requestURL.toString().contains("teacher/user/sendCode")) return null;
+        if (requestURL.toString().contains("teacher/user/updatePasswordByCode")) return null;
         if (requestURL.toString().contains("actuator/routes")) return null;
         if (requestURL.toString().contains("actuator/filters")) return null;
 

@@ -29,6 +29,18 @@ spring:
     timeout: 50000
     password: dmcn
 
+  mail:
+    host: smtp.qq.com
+    username: 2833785445@qq.com
+    password: coksvbkjoemwddda
+    default-encoding: UTF-8
+#    port: 465
+#    properties:
+#      mail:
+#        smtp:
+#          ssl:
+#            enable: true
+
 
 mybatis-plus:
   configuration:

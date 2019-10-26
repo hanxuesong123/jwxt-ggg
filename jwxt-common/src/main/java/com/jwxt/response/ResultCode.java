@@ -6,6 +6,7 @@ public enum ResultCode {
 
   PARAMETERS_IS_NULL(false,20001,"服务器内部错误,参数传递为空"),
 
+  EMAIL_IS_ERROR(false,9997,"邮件发送失败"),
   ERROR_PASSWORD(false,9998,"密码不正确"),
   ERPI_TOKEN(false,9999,"令牌过期，请重新登陆"),
   SUCCESS(true,10000,"恭喜你,操作成功"),

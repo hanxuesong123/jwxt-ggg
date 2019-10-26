@@ -1,6 +1,7 @@
 package com.jwxt.permission.controller;
 
 import com.jwxt.base.BaseController;
+import com.jwxt.exceptions.CommonException;
 import com.jwxt.permission.service.UserService;
 import com.jwxt.response.Result;
 import com.jwxt.utils.JwtUtils;
@@ -42,4 +43,18 @@ public class UserController extends BaseController {
         return userService.updatePassword(map, JwtUtils.getClaims(request).getId());
     }
 
+    @RequestMapping(value = "/checkTelephone",method = RequestMethod.POST,name = "PROFILE")
+    public Result checkTelephone(@RequestBody Map<String,Object> map ){
+        return userService.checkTelephone(map);
+    }
+
+    @RequestMapping(value = "/sendCode",method = RequestMethod.POST,name = "PROFILE")
+    public Result sendCode(@RequestBody Map<String,Object> map ) throws CommonException {
+        return userService.sendCode(map);
+    }
+
+    @RequestMapping(value = "/updatePasswordByCode",method = RequestMethod.POST,name = "PROFILE")
+    public Result updatePasswordByCode(@RequestBody Map<String,Object> map){
+        return userService.updatePasswordByCode(map);
+    }
 }

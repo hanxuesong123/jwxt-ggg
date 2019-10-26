@@ -82,7 +82,7 @@ public class MACUtils {
 
     public static String getLocalMac(String ipAddress) throws Exception,
             UnknownHostException, UnknownHostException {
-        // TODO Auto-generated method stub
+
         String str = "";
         String macAddress = "";
         final String LOOPBACK_ADDRESS = "127.0.0.1";

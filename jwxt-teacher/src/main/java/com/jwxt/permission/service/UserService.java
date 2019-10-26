@@ -1,5 +1,6 @@
 package com.jwxt.permission.service;
 
+import com.jwxt.exceptions.CommonException;
 import com.jwxt.response.Result;
 import com.jwxt.vo.TeacherVo;
 
@@ -16,4 +17,10 @@ public interface UserService {
     Result findOne(String id);
 
     Result updatePassword(Map<String, Object> map, String id);
+
+    Result checkTelephone(Map<String, Object> map);
+
+    Result sendCode(Map<String, Object> map) throws CommonException;
+
+    Result updatePasswordByCode(Map<String, Object> map);
 }

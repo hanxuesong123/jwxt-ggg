@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.io.InputStream;
 import java.util.*;
@@ -172,7 +173,6 @@ public class StudentExamServiceImpl implements StudentExamService {
         if(userId == null) return Result.FAIL();
         if(examId == null) return Result.FAIL();
 
-        //TODO: 空指针
         QueryWrapper<Score> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("student_id",userId);
         queryWrapper.eq("exam_id",examId);
@@ -199,11 +199,17 @@ public class StudentExamServiceImpl implements StudentExamService {
         return new Result(ResultCode.SUCCESS,examMapper.selectById(id));
     }
 
+    public static void main(String[] args) {
+        String str = "sdasdasdasd!&3123123123";
+        System.out.println(str.split("!&").length);
+    }
+
+
     @Override
     public Result saveExam(Map<String, Object> map) {
         String[] singles = map.get("single").toString().split(",");
         String[] mutiples = map.get("mutiple").toString().split("@");
-        String[] asks = map.get("ask").toString().split(",");
+        String[] asks = map.get("ask").toString().split("!&");
 
         Exam exam = examMapper.selectById(map.get("id").toString());  //获得当前试卷实例
 
@@ -348,11 +354,10 @@ public class StudentExamServiceImpl implements StudentExamService {
         }
 
         if (questionTypeIds.contains("3")){
-
             Integer askScore = 0;
-
             String askJoins = exam.getAskJoins();
             String[] askIdArray = askJoins.split(",");
+            Integer askCount = exam.getAskCount();
             for (int i = 0; i < askIdArray.length; i++) {
                 //因为简单题无法自动判分,所以只能保存学生答案到数据库st_ask_result
                 //等待老师结束试卷的考试时,再把当前班级的所有学生的简答题都发送给前台
@@ -380,14 +385,6 @@ public class StudentExamServiceImpl implements StudentExamService {
         return Result.SUCCESS();
     }
 
-/*    public static void main(String[] args) {
-        String str = "{\"id\":\"1184655534469525506\",\"modifyName\":\"\",\"modifyTime\":1571278864000,\"mutipleAsk\":\"1,2\",\"mutipleContent\":\"CAD和深V接口发多少\",\"mutipleOptionA\":\"艾弗森案发\",\"mutipleOptionB\":\"阿发我阿飞\",\"mutipleOptionC\":\"啊发发发阿飞阿萨斯首发\",\"mutipleOptionD\":\"艾弗森沙发沙发上\",\"mutipleStatus\":\"1\"}";
-        JSONObject jsonObject = JSON.parseObject(str);
-        Mutiple mutiple = JSONUtils.ObjectToJavaBean(jsonObject, Mutiple.class);
-        System.out.println(mutiple.toString());
-    }*/
-
-
     @Override
     public Result saveTempAnswer(Map<String, Object> map) {
         String singles = map.get("single").toString();
@@ -400,7 +397,16 @@ public class StudentExamServiceImpl implements StudentExamService {
 
         sb.append(singles).append("#").append(mutiples).append("#").append(asks);
 
-        redisTemplate.opsForHash().put(examId,studentId,sb.toString().trim());
+        Boolean bool = redisTemplate.opsForHash().hasKey(examId, studentId);
+
+        if(bool){
+            redisTemplate.opsForHash().delete(examId,studentId);
+            redisTemplate.opsForHash().put(examId,studentId,sb.toString().trim());
+        }else{
+            redisTemplate.opsForHash().put(examId,studentId,sb.toString().trim());
+        }
+
+
 
         return Result.SUCCESS();
     }
@@ -431,9 +437,9 @@ public class StudentExamServiceImpl implements StudentExamService {
                 queryWrapper.eq("single_id",singleId);
                 queryWrapper.eq("exam_id",exam.getId());
                 queryWrapper.eq("student_id",userId);
-                //TODO: 数据库有多条数据, 现在这里是异常
-                SingleResult singleResult = singleResultMapper.selectOne(queryWrapper);
-                list.add(singleResult);
+
+                List<SingleResult> singleResults = singleResultMapper.selectList(queryWrapper);
+                if(!CollectionUtils.isEmpty(singleResults) && singleResults.size() > 0) list.add(singleResults.get(0));
             }
 
             goBackVo.setSingleResults(list);
@@ -478,8 +484,9 @@ public class StudentExamServiceImpl implements StudentExamService {
                 queryWrapper.eq("exam_id",exam.getId());
                 queryWrapper.eq("student_id",userId);
 
-                AskResult askResult = askResultMapper.selectOne(queryWrapper);
-                list.add(askResult);
+                List<AskResult> askResults = askResultMapper.selectList(queryWrapper);
+
+                if(!CollectionUtils.isEmpty(askResults) && askResults.size() > 0) list.add(askResults.get(0));
             }
 
             goBackVo.setAskResults(list);
@@ -520,7 +527,6 @@ public class StudentExamServiceImpl implements StudentExamService {
 
         SftpUtil sftpUtil = new SftpUtil(FTP_HOST, Integer.parseInt(FTP_PORT), FTP_USERNAME, FTP_PASSWORD);
 
-        //TODO:联网后打开
         sftpUtil.upload("/var/ftp/pub", newFileName, inputStream);
 
         String url = "ftp://".concat(FTP_HOST).concat(":21/pub/").concat(newFileName);
